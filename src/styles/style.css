@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  background: #1a1a2e;
+  color: #e0e0e0;
+}
+
+header {
+  padding: 2rem;
+  text-align: center;
+}
+
+header p {
+  color: #aaa;
+  margin-top: 0.5rem;
+}
+
+#app {
+  padding: 2rem;
+}
