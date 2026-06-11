@@ -1,0 +1,16 @@
+group,n_group,n_agent,missing_Agent,AgentUser%,AgentDaily%,CopilotOnly%,AgentPlanned%,AgentNo%,n_change,missing_Change,GreatChange%
+Fintech,1690,1407,283,36.4,17.6,15.8,18.8,29.0,1406,284,17.4
+Software Development,16282,13395,2887,35.2,16.9,13.7,17.3,33.8,13303,2979,18.2
+Media & Advertising Services,773,659,114,34.6,16.1,13.5,17.5,34.4,651,122,15.7
+Computer Systems Design and Services,894,745,149,33.3,14.4,11.5,15.8,39.3,740,154,17.0
+Retail and Consumer Services,1053,887,166,31.6,14.1,17.2,17.4,33.8,878,175,15.0
+"Internet, Telecomm or Information Services",1698,1421,277,30.0,13.6,14.8,18.4,36.7,1412,286,15.7
+Healthcare,1397,1181,216,29.8,14.1,16.3,17.5,36.3,1174,223,13.5
+Banking/Financial Services,1437,1197,240,28.5,12.6,14.5,22.0,35.1,1187,250,15.5
+Insurance,434,376,58,27.4,10.6,17.0,18.6,37.0,376,58,10.1
+Energy,742,632,110,27.2,10.8,15.2,18.8,38.8,626,116,16.0
+"Transportation, or Supply Chain",910,776,134,27.2,12.8,16.2,18.9,37.6,779,131,12.5
+Other:,2667,2273,394,26.3,10.9,13.7,16.7,43.3,2256,411,15.6
+Higher Education,1167,1016,151,24.9,8.8,10.8,14.1,50.2,1012,155,14.4
+Manufacturing,1315,1133,182,23.4,9.4,17.1,16.6,42.9,1115,200,12.6
+Government,1183,1004,179,20.6,7.7,12.5,19.3,47.5,1003,180,13.5
