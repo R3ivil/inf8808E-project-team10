@@ -52,6 +52,16 @@ The app uses compact chart-ready summaries:
 
 The source subset was prepared from the Stack Overflow Developer Survey 2025 using the variables selected in the Team 10 mockup. The raw 49,191-row subset is intentionally not served by the website because the current visualizations use pre-aggregated denominators and rates.
 
+To regenerate the chart-ready CSVs from the local raw subset:
+
+```bash
+python3 scripts/build_analysis_data.py \
+  --input ../data/stackoverflow_2025_project_subset.csv \
+  --out public/data/analysis
+```
+
+The original exploratory notebook from the data-analysis handoff is archived outside this repo at `../data/selected_files_20260611T153613.zip`. The script above is the cleaned reproducible version used for the final website CSVs.
+
 ## Visualization Plan
 
 The initial plan follows the local INF8808 D3 visualization agent workflow and maps to the six mockup sections:
