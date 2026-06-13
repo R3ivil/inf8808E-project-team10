@@ -2,15 +2,18 @@
 """Regenerate chart-ready CSV summaries from the Stack Overflow 2025 subset.
 
 Default input is the project-level subset kept outside this Vite repo:
-../data/stackoverflow_2025_project_subset.csv
+../data/results.csv.csv
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+
+csv.field_size_limit(sys.maxsize)
 
 
 MISSING = {"", "NA", "N/A", "None", "Prefer not to say"}
@@ -111,7 +114,18 @@ AGE_ORDER = [
     "65 years or older",
 ]
 
-YEARS_ORDER = ["0-2y", "3-5y", "6-10y", "11-20y", "21+y"]
+YEARS_ORDER = ["0-3 years", "4-8 years", "9-15 years", "16+ years"]
+REMOTE_ORDER = ["Hybrid, remote-leaning", "In-person", "Hybrid, office-leaning", "Remote"]
+ORGSIZE_ORDER = [
+    "Just me - I am a freelancer, sole proprietor, etc.",
+    "Less than 20 employees",
+    "20 to 99 employees",
+    "100 to 499 employees",
+    "500 to 999 employees",
+    "1,000 to 4,999 employees",
+    "5,000 to 9,999 employees",
+    "10,000 or more employees",
+]
 
 
 def clean(value: str | None) -> str:
@@ -174,15 +188,31 @@ def years_bin(value: str) -> str:
             years = float(value)
         except ValueError:
             return ""
-    if years <= 2:
-        return "0-2y"
-    if years <= 5:
-        return "3-5y"
-    if years <= 10:
-        return "6-10y"
-    if years <= 20:
-        return "11-20y"
-    return "21+y"
+    if years <= 3:
+        return "0-3 years"
+    if years <= 8:
+        return "4-8 years"
+    if years <= 15:
+        return "9-15 years"
+    return "16+ years"
+
+
+def remote_bucket(value: str) -> str:
+    if value == "Remote":
+        return "Remote"
+    if value == "In-person":
+        return "In-person"
+    if "leans heavy to flexibility" in value:
+        return "Hybrid, remote-leaning"
+    if "leans heavy to in-person" in value:
+        return "Hybrid, office-leaning"
+    return ""
+
+
+def orgsize_bucket(value: str) -> str:
+    if "don" in value.lower() and "know" in value.lower():
+        return ""
+    return value
 
 
 def adoption_group(row: dict[str, str]) -> str:
@@ -359,6 +389,8 @@ def build(input_path: Path, output_dir: Path) -> None:
     industry_groups = group_rows(rows, lambda row: clean(row.get("Industry")) if valid(row.get("Industry")) else "")
     age_groups = group_rows(rows, lambda row: clean(row.get("Age")) if valid(row.get("Age")) else "")
     years_groups = group_rows(rows, lambda row: years_bin(clean(row.get("YearsCode"))))
+    remote_groups = group_rows(rows, lambda row: remote_bucket(clean(row.get("RemoteWork"))) if valid(row.get("RemoteWork")) else "")
+    orgsize_groups = group_rows(rows, lambda row: orgsize_bucket(clean(row.get("OrgSize"))) if valid(row.get("OrgSize")) else "")
     icorpm_groups = group_rows(rows, lambda row: clean(row.get("ICorPM")) if valid(row.get("ICorPM")) else "")
     adoption_groups = group_rows(rows, adoption_group)
     trust_groups = group_rows(rows, lambda row: clean(row.get("AIAcc")) if valid(row.get("AIAcc")) else "")
@@ -383,6 +415,8 @@ def build(input_path: Path, output_dir: Path) -> None:
         ("industry_cohort_stats.csv", industry_groups, None),
         ("age_cohort_stats.csv", age_groups, AGE_ORDER),
         ("yearscode_cohort_stats.csv", years_groups, YEARS_ORDER),
+        ("remotework_cohort_stats.csv", remote_groups, REMOTE_ORDER),
+        ("orgsize_cohort_stats.csv", orgsize_groups, ORGSIZE_ORDER),
         ("icorpm_adoption_composition.csv", icorpm_groups, None),
     ]
     for filename, groups, order in adoption_jobs:
@@ -439,7 +473,7 @@ def main() -> None:
     parser.add_argument(
         "--input",
         type=Path,
-        default=Path("../data/stackoverflow_2025_project_subset.csv"),
+        default=Path("../data/results.csv.csv"),
         help="Path to the one-row-per-respondent project subset CSV.",
     )
     parser.add_argument(

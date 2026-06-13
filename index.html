@@ -7,14 +7,6 @@
   </head>
   <body>
     <header class="site-header" id="top">
-      <nav class="top-nav" aria-label="Section navigation">
-        <a href="#v1">Adoption vs trust</a>
-        <a href="#v2">Adoption mix</a>
-        <a href="#v6">Agents</a>
-        <a href="#v3">Baseline</a>
-        <a href="#v4">Frustrations</a>
-        <a href="#v5">Human help</a>
-      </nav>
       <div class="hero">
         <p class="eyebrow">Stack Overflow Developer Survey 2025</p>
         <h1>Developer AI adoption is high, but trust is uneven.</h1>
@@ -42,157 +34,153 @@
       </div>
     </header>
 
-    <main>
-      <p class="status" id="status">Loading...</p>
+    <div id="global-controls" class="global-controls" aria-label="Population scope and global filters"></div>
 
-      <section class="viz-section" id="v1">
-        <div class="section-copy">
-          <p class="eyebrow">V1 · Adoption-trust gap</p>
-          <h2>The strongest story is high use with low trust.</h2>
-          <p>
-            Infrastructure-oriented roles use AI heavily but trust it less than front-end, mobile, and AI/ML roles. The chart compares adoption against either trust or complex-task confidence on the same 0-100% scale.
-          </p>
-          <label class="control-label" for="gap-metric">Second metric</label>
-          <div class="control-row">
-            <select id="gap-grouping" aria-label="Adoption-trust grouping">
-              <option value="Role">Role</option>
-              <option value="Industry">Industry</option>
+    <div class="page-layout">
+      <nav id="side-nav" class="side-nav" aria-label="Section navigation"></nav>
+
+      <main>
+        <p class="status" id="status">Loading...</p>
+
+        <section class="viz-section" id="v1">
+          <div class="section-copy">
+            <p class="eyebrow">V1 - Adoption-trust gap</p>
+            <h2>The strongest story is high use with low trust.</h2>
+            <p>
+              Infrastructure-oriented roles use AI heavily but trust it less than front-end, mobile, and AI/ML roles. The chart compares adoption against either trust or complex-task confidence on the same 0-100% scale.
+            </p>
+            <p class="hint">Tip: hover a row label to see Pin or Unpin, then click it to compare that cohort across charts.</p>
+            <label class="control-label" for="gap-metric">Second metric</label>
+            <div class="control-row">
+              <select id="gap-metric" aria-label="Adoption-trust second metric">
+                <option value="Trust%">Trust accuracy</option>
+                <option value="ComplexConf%">Complex confidence</option>
+              </select>
+            </div>
+            <div class="control-row">
+              <span class="state-pill" id="gap-state">trust</span>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div id="v1-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v2">
+          <div class="section-copy">
+            <p class="eyebrow">V2 - Adoption composition</p>
+            <h2>Adoption mix changes across profile and work-context groups.</h2>
+            <p id="composition-note">
+              Use tabs to switch between profile and work-context panels. Sort unordered groups and pin role cohorts for cross-chart comparison.
+            </p>
+            <div class="tabs" aria-label="Adoption composition panel set">
+              <button class="tab-btn active" type="button" data-v2-tab="Profile">Profile</button>
+              <button class="tab-btn" type="button" data-v2-tab="Work context">Work context</button>
+            </div>
+            <label class="control-label" for="composition-sort">Sort rows</label>
+            <select id="composition-sort">
+              <option value="source">Survey order</option>
+              <option value="AnyUser%">AI users</option>
+              <option value="Frequent%">Frequent users</option>
+              <option value="NonUser%">Non-users</option>
             </select>
-            <select id="gap-metric" aria-label="Adoption-trust second metric">
-              <option value="Trust%">Trust in AI accuracy</option>
-              <option value="ComplexConf%">Complex-task confidence</option>
-            </select>
+            <div class="control-row">
+              <span class="state-pill" id="composition-state">Profile; order survey</span>
+            </div>
           </div>
-          <div class="control-row">
-            <span class="state-pill" id="gap-state">Role; trust</span>
-            <button class="small-button" id="gap-reset" type="button">Reset</button>
+          <div class="chart-card">
+            <div id="v2-chart"></div>
           </div>
-        </div>
-        <div class="chart-card">
-          <div id="v1-chart"></div>
-        </div>
-      </section>
+        </section>
 
-      <section class="viz-section" id="v2">
-        <div class="section-copy">
-          <p class="eyebrow">V2 · Adoption composition</p>
-          <h2>Experience and management level explain adoption better than work mode.</h2>
-          <p id="composition-note">
-            Experience shows the clearest adoption decay: 85.5% any-use at 3-5 years versus 72.2% at 21+ years.
-          </p>
-          <div class="tabs" id="composition-tabs" aria-label="Adoption grouping tabs"></div>
-          <label class="control-label" for="composition-sort">Sort cohorts</label>
-          <select id="composition-sort">
-            <option value="AnyUser%">AI users</option>
-            <option value="Daily%">Daily users</option>
-            <option value="NonUser%">Non-users</option>
-            <option value="source">Survey order</option>
-          </select>
-          <div class="control-row">
-            <span class="state-pill" id="composition-state">Experience; sort AI users; pinned none</span>
-            <button class="small-button" id="composition-reset" type="button">Reset</button>
+        <section class="viz-section" id="v6">
+          <div class="section-copy">
+            <p class="eyebrow">V6 - AI-agent readiness</p>
+            <h2>Agent use is high enough to be a main section.</h2>
+            <p>
+              AI/ML engineers, founders, senior executives, and managers lead agent adoption. This section appears early because agent workflows help explain perceived changes in development work.
+            </p>
+            <p class="hint">Tip: hover a row label to see Pin or Unpin, then click it to compare that cohort across charts.</p>
+            <div class="control-row">
+              <span class="state-pill" id="agent-state">Top cohorts by agent use</span>
+            </div>
           </div>
-        </div>
-        <div class="chart-card">
-          <div id="v2-chart"></div>
-        </div>
-      </section>
-
-      <section class="viz-section" id="v6">
-        <div class="section-copy">
-          <p class="eyebrow">V6 · AI-agent readiness</p>
-          <h2>Agent use is high enough to be a main section.</h2>
-          <p>
-            AI/ML engineers, founders, senior executives, and managers lead agent adoption. This section appears early because agent workflows help explain perceived changes in development work.
-          </p>
-          <label class="control-label" for="agent-grouping">Grouping</label>
-          <select id="agent-grouping">
-            <option value="Role">Role</option>
-            <option value="Industry">Industry</option>
-          </select>
-          <div class="control-row">
-            <span class="state-pill" id="agent-state">Role; top cohorts by agent use</span>
-            <button class="small-button" id="agent-reset" type="button">Reset</button>
+          <div class="chart-card">
+            <div id="v6-chart"></div>
           </div>
-        </div>
-        <div class="chart-card">
-          <div id="v6-chart"></div>
-        </div>
-      </section>
+        </section>
 
-      <section class="viz-section" id="v3">
-        <div class="section-copy">
-          <p class="eyebrow">V3 · Perception baseline</p>
-          <h2>Different cohorts deviate in different ways.</h2>
-          <p>
-            The matrix compares each role to the survey baseline. This makes the infrastructure paradox visible: adoption is near or above baseline, while trust and complex-task confidence sit below baseline.
-          </p>
-          <label class="control-label" for="baseline-grouping">Matrix controls</label>
-          <div class="control-row">
-            <select id="baseline-grouping" aria-label="Baseline grouping">
-              <option value="Role">Role</option>
-              <option value="Industry">Industry</option>
-            </select>
-            <select id="baseline-sort" aria-label="Baseline sort metric">
-              <option value="Adoption">Adoption</option>
+        <section class="viz-section" id="v3">
+          <div class="section-copy">
+            <p class="eyebrow">V3 - Perception baseline</p>
+            <h2>Different cohorts deviate in different ways.</h2>
+            <p>
+              The matrix compares each cohort to the survey baseline. This makes the infrastructure paradox visible: adoption is near or above baseline, while trust and complex-task confidence sit below baseline.
+            </p>
+            <p class="hint">Tip: hover a row label to see Pin or Unpin, then click it to compare that cohort across charts.</p>
+            <label class="control-label" for="baseline-sort">Matrix sort</label>
+            <div class="control-row">
+                <select id="baseline-sort" aria-label="Baseline sort metric">
+                <option value="Adoption">Adoption</option>
+                <option value="Trust">Trust</option>
+                <option value="Complex confidence">Complex confidence</option>
+                <option value="Job-threat concern">Job-threat concern</option>
+              </select>
+            </div>
+            <div class="control-row">
+              <span class="state-pill" id="baseline-state">Sorted by Adoption</span>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div id="v3-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v4">
+          <div class="section-copy">
+            <p class="eyebrow">V4 - Frustration profile cards</p>
+            <h2>The almost-right problem grows with use.</h2>
+            <p>
+              The top frustration is not only an onboarding issue. Daily users report almost-right AI outputs more often than occasional users, which points to review and debugging needs for mature adopters.
+            </p>
+          </div>
+          <div class="chart-card">
+            <div id="v4-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v5">
+          <div class="section-copy">
+            <p class="eyebrow">V5 - Human-help situations</p>
+            <h2>Human judgment remains part of the workflow.</h2>
+            <p>
+              Even respondents who highly trust AI still prefer people for some tasks. This closes the story by showing where teams still need review, mentorship, and shared judgment.
+            </p>
+            <label class="control-label" for="human-grouping">Column grouping</label>
+            <select id="human-grouping">
               <option value="Trust">Trust</option>
-              <option value="Complex confidence">Complex confidence</option>
-              <option value="Job-threat concern">Job-threat concern</option>
+              <option value="Confidence">Complex-task confidence</option>
+              <option value="Adoption">Adoption status</option>
             </select>
+            <div class="control-row">
+              <span class="state-pill" id="human-state">Grouped by trust</span>
+            </div>
           </div>
-          <div class="control-row">
-            <span class="state-pill" id="baseline-state">Role; sorted by Adoption</span>
-            <button class="small-button" id="baseline-reset" type="button">Reset</button>
+          <div class="chart-card">
+            <div id="v5-chart"></div>
           </div>
-        </div>
-        <div class="chart-card">
-          <div id="v3-chart"></div>
-        </div>
-      </section>
+        </section>
 
-      <section class="viz-section" id="v4">
-        <div class="section-copy">
-          <p class="eyebrow">V4 · Frustration maturity curve</p>
-          <h2>The “almost right” problem grows with use.</h2>
+        <section class="method-note" aria-label="Methodological notes">
+          <h2>Methodological notes</h2>
           <p>
-            The top frustration is not only an onboarding issue. Daily users report almost-right AI outputs more often than occasional users, which points to review and debugging needs for mature adopters.
+            Results are descriptive associations from a voluntary Stack Overflow survey, not causal evidence. Missing and NA responses are excluded from chart denominators. Multi-select fields use respondent denominators and do not sum to 100%.
           </p>
-        </div>
-        <div class="chart-card">
-          <div id="v4-chart"></div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      <section class="viz-section" id="v5">
-        <div class="section-copy">
-          <p class="eyebrow">V5 · Human-help situations</p>
-          <h2>Human judgment remains part of the workflow.</h2>
-          <p>
-            Even respondents who highly trust AI still prefer people for some tasks. This closes the story by showing where teams still need review, mentorship, and shared judgment.
-          </p>
-          <label class="control-label" for="human-grouping">Column grouping</label>
-          <select id="human-grouping">
-            <option value="Trust">Trust</option>
-            <option value="Confidence">Complex-task confidence</option>
-            <option value="Adoption">Adoption status</option>
-          </select>
-          <div class="control-row">
-            <span class="state-pill" id="human-state">Grouped by trust</span>
-            <button class="small-button" id="human-reset" type="button">Reset</button>
-          </div>
-        </div>
-        <div class="chart-card">
-          <div id="v5-chart"></div>
-        </div>
-      </section>
-
-      <section class="method-note" aria-label="Methodological notes">
-        <h2>Methodological notes</h2>
-        <p>
-          Results are descriptive associations from a voluntary Stack Overflow survey, not causal evidence. Missing and NA responses are excluded from chart denominators. Multi-select fields use respondent denominators and do not sum to 100%.
-        </p>
-      </section>
-    </main>
+      <aside id="cohort-workspace" class="cohort-workspace" aria-label="Pinned cohorts"></aside>
+    </div>
 
     <div id="tooltip" role="status"></div>
     <script type="module" src="/src/main.js"></script>

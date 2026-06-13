@@ -1,111 +1,134 @@
 import * as d3 from 'd3'
 import {
   BLUE,
-  ORANGE,
-  addVerticalGrid,
   clear,
   formatPct,
   hideTooltip,
   makeSvg,
   markInteractive,
+  shortFrustration,
   showTooltip,
   toNumber,
   truncate,
 } from './chartUtils.js'
 
-const GROUPS = ['Occasional users', 'Weekly users', 'Daily users']
+function weightedAverage(rows, key) {
+  const total = rows.reduce((sum, row) => sum + toNumber(row.n_resp), 0)
+  if (!total) return 0
+  return rows.reduce((sum, row) => sum + toNumber(row[key]) * toNumber(row.n_resp), 0) / total
+}
+
+function profileRows(data) {
+  const daily = data.find((d) => d.group === 'Daily users')
+  const weekly = data.find((d) => d.group === 'Weekly users')
+  const occasional = data.find((d) => d.group === 'Occasional users')
+  const planned = data.find((d) => d.group === 'Planned users')
+  const non = data.find((d) => d.group === 'Non-users')
+  const keys = Object.keys(daily).filter((key) => !['group', 'n_resp'].includes(key))
+
+  return [
+    {
+      title: 'Uses AI frequently',
+      n: toNumber(daily.n_resp) + toNumber(weekly.n_resp),
+      values: Object.fromEntries(keys.map((key) => [key, weightedAverage([daily, weekly], key)])),
+    },
+    { title: 'Uses AI sometimes', n: toNumber(occasional.n_resp), values: occasional },
+    { title: 'Plans to use', n: toNumber(planned.n_resp), values: planned },
+    { title: 'Does not use / no plan', n: toNumber(non.n_resp), values: non },
+  ]
+}
 
 export function renderFrustrationProfiles(container, data) {
   const root = clear(container)
-  const daily = data.find((d) => d.group === 'Daily users')
-  const categories = Object.keys(daily)
-    .filter((key) => !['group', 'n_resp'].includes(key) && key !== 'Other (write in):')
-    .sort((a, b) => toNumber(daily[b]) - toNumber(daily[a]))
-    .slice(0, 5)
+  const profiles = profileRows(data)
+  const allKeys = Object.keys(data[0]).filter((key) => !['group', 'n_resp'].includes(key))
 
-  const rows = categories.flatMap((category) => GROUPS.map((group) => {
-    const row = data.find((d) => d.group === group)
-    return { category, group, value: toNumber(row[category]), n: row.n_resp }
-  }))
-
-  const margin = { top: 46, right: 150, bottom: 58, left: 240 }
-  const width = 920
-  const rowHeight = 52
-  const height = margin.top + margin.bottom + categories.length * rowHeight
-  const innerWidth = width - margin.left - margin.right
-  const innerHeight = height - margin.top - margin.bottom
-  const svg = makeSvg(root, width, height, 'AI frustrations by adoption maturity', 'A line chart with a visible percentage axis shows how common frustrations change from occasional to daily AI users.')
-  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
-  const x = d3.scaleLinear().domain([0, 85]).range([0, innerWidth])
-  const y = d3.scaleBand().domain(categories).range([0, innerHeight]).padding(0.32)
-  const offset = d3.scalePoint().domain(GROUPS).range([0, y.bandwidth()]).padding(0.5)
-  const line = d3.line()
-    .x((d) => x(d.value))
-    .y((d) => y(d.category) + offset(d.group))
-
-  addVerticalGrid(g, x, innerHeight)
-  g.append('g')
-    .attr('class', 'axis')
-    .call(d3.axisLeft(y).tickFormat((d) => truncate(d, 38)))
-    .call((axis) => axis.select('.domain').remove())
-  g.append('g')
-    .attr('class', 'axis')
-    .attr('transform', `translate(0,${innerHeight})`)
-    .call(d3.axisBottom(x).ticks(6).tickFormat((d) => `${d}%`))
-    .call((axis) => axis.select('.domain').remove())
-
-  g.selectAll('path.frustration-line')
-    .data(categories)
-    .join('path')
-    .attr('class', 'frustration-line')
-    .attr('d', (category) => line(rows.filter((d) => d.category === category)))
-    .attr('stroke', (category) => category.startsWith('AI solutions') ? ORANGE : '#94a3b8')
-
-  GROUPS.forEach((group, index) => {
-    g.append('text')
-      .attr('class', 'axis-label')
-      .attr('x', innerWidth + 10)
-      .attr('y', offset(group) + 4)
-      .text(group.replace(' users', ''))
-      .attr('fill', index === GROUPS.length - 1 ? ORANGE : BLUE)
-  })
-
-  const marks = g.selectAll('circle.frustration-point')
-    .data(rows)
-    .join('circle')
-    .attr('class', 'dot')
-    .attr('cx', (d) => x(d.value))
-    .attr('cy', (d) => y(d.category) + offset(d.group))
-    .attr('r', 5)
-    .attr('fill', (d) => d.category.startsWith('AI solutions') ? ORANGE : BLUE)
-    .on('mousemove focus', (event, d) => showTooltip(event, `
-      <strong>${d.group}</strong><br>
-      ${d.category}: ${formatPct(d.value)}<br>
-      Valid n: ${Number(d.n).toLocaleString()}<br>
-      Missing / NA: shown in source summary denominator notes
-    `))
-    .on('mouseleave blur', hideTooltip)
-  markInteractive(marks, (d) => `${d.group}, ${d.category}, ${formatPct(d.value)}, valid n ${d.n}`)
-
-  g.selectAll('text.value-label')
-    .data(rows.filter((d) => d.group === 'Daily users' || d.group === 'Occasional users'))
-    .join('text')
-    .attr('class', 'mark-label')
-    .attr('x', (d) => x(d.value) + (d.group === 'Daily users' ? 8 : -8))
-    .attr('y', (d) => y(d.category) + offset(d.group) + 4)
-    .attr('text-anchor', (d) => d.group === 'Daily users' ? 'start' : 'end')
-    .text((d) => formatPct(d.value, 0))
-
-  g.append('text')
-    .attr('x', innerWidth)
-    .attr('y', innerHeight + 44)
-    .attr('class', 'axis-label')
-    .attr('text-anchor', 'end')
-    .text('Percent of valid AIFrustration respondents')
+  const margin = { top: 86, right: 24, bottom: 58, left: 174 }
+  const cardWidth = 304
+  const cardHeight = 238
+  const gapX = 128
+  const gapY = 72
+  const width = margin.left + margin.right + cardWidth * 2 + gapX
+  const height = margin.top + margin.bottom + cardHeight * 2 + gapY
+  const svg = makeSvg(root, width, height, 'AI frustration profile cards', 'Four small lollipop charts show the top AI frustrations by adoption profile.')
 
   svg.append('text')
-    .attr('x', margin.left)
-    .attr('y', 20)
+    .attr('x', 16)
+    .attr('y', 30)
+    .attr('class', 'chart-title')
+    .text('AI frustration profile cards')
+  svg.append('text')
+    .attr('x', 16)
+    .attr('y', 56)
     .attr('class', 'chart-note')
-    .text('Multi-select responses; each row uses a visible percent scale and values do not sum to 100%.')
+    .text('Each card uses the same 0-100% scale. Multi-select shares can exceed 100%.')
+
+  profiles.forEach((profile, index) => {
+    const col = index % 2
+    const row = Math.floor(index / 2)
+    const x0 = margin.left + col * (cardWidth + gapX)
+    const y0 = margin.top + row * (cardHeight + gapY)
+    const rows = allKeys
+      .map((key) => ({ key, value: toNumber(profile.values[key]) }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5)
+    const x = d3.scaleLinear().domain([0, 100]).range([0, cardWidth])
+    const y = d3.scaleBand().domain(rows.map((d) => d.key)).range([48, cardHeight]).padding(0.34)
+    const g = svg.append('g').attr('transform', `translate(${x0},${y0})`)
+
+    g.append('text')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('class', 'chart-subtitle')
+      .text(profile.title)
+    g.append('text')
+      .attr('x', 0)
+      .attr('y', 24)
+      .attr('class', 'chart-subtitle small')
+      .text(`valid n=${Number(profile.n).toLocaleString()}`)
+
+    g.append('g')
+      .attr('class', 'grid')
+      .attr('transform', `translate(0,${cardHeight})`)
+      .call(d3.axisBottom(x).ticks(5).tickSize(-(cardHeight - 48)).tickFormat((d) => `${d}`))
+      .call((axis) => axis.select('.domain').remove())
+
+    g.append('g')
+      .attr('class', 'axis')
+      .call(d3.axisLeft(y).tickSize(0).tickPadding(14).tickFormat((d) => truncate(shortFrustration(d), 24)))
+      .call((axis) => axis.select('.domain').remove())
+
+    g.selectAll('line.lollipop')
+      .data(rows)
+      .join('line')
+      .attr('class', 'gap-line')
+      .attr('x1', 0)
+      .attr('x2', (d) => x(d.value))
+      .attr('y1', (d) => y(d.key) + y.bandwidth() / 2)
+      .attr('y2', (d) => y(d.key) + y.bandwidth() / 2)
+
+    const marks = g.selectAll('circle.frustration-dot')
+      .data(rows)
+      .join('circle')
+      .attr('class', 'dot')
+      .attr('cx', (d) => x(d.value))
+      .attr('cy', (d) => y(d.key) + y.bandwidth() / 2)
+      .attr('r', 5)
+      .attr('fill', BLUE)
+      .on('mousemove focus', (event, d) => showTooltip(event, `
+        <strong>${profile.title}</strong><br>
+        ${shortFrustration(d.key)}: ${formatPct(d.value)}<br>
+        Valid n: ${Number(profile.n).toLocaleString()}
+      `))
+      .on('mouseleave blur', hideTooltip)
+    markInteractive(marks, (d) => `${profile.title}, ${shortFrustration(d.key)}, ${formatPct(d.value)}`)
+
+    g.selectAll('text.value-label')
+      .data(rows)
+      .join('text')
+      .attr('class', 'mark-label')
+      .attr('x', (d) => x(d.value) + 6)
+      .attr('y', (d) => y(d.key) + y.bandwidth() / 2 + 4)
+      .text((d) => formatPct(d.value, 0))
+  })
 }

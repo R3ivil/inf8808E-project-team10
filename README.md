@@ -40,6 +40,8 @@ The app uses compact chart-ready summaries:
 - `public/data/analysis/role_adoption_composition.csv`
 - `public/data/analysis/yearscode_cohort_stats.csv`
 - `public/data/analysis/age_cohort_stats.csv`
+- `public/data/analysis/remotework_cohort_stats.csv`
+- `public/data/analysis/orgsize_cohort_stats.csv`
 - `public/data/analysis/agent_readiness_by_role.csv`
 - `public/data/analysis/agent_readiness_by_industry.csv`
 - `public/data/analysis/frustrations_by_adoption.csv`
@@ -55,8 +57,8 @@ The source subset was prepared from the Stack Overflow Developer Survey 2025 usi
 To regenerate the chart-ready CSVs from the local raw subset:
 
 ```bash
-python3 scripts/build_analysis_data.py \
-  --input ../data/stackoverflow_2025_project_subset.csv \
+python scripts/build_analysis_data.py \
+  --input data/results.csv \
   --out public/data/analysis
 ```
 
