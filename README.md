@@ -1,6 +1,6 @@
 # INF8808E Project Team 10
 
-Interactive D3 website for exploring how developer profiles and work contexts influence AI tool adoption and perceptions in the Stack Overflow Developer Survey 2025.
+Independent D3 website for exploring how developer profiles and work contexts influence AI tool adoption and perceptions, using the [public 2025 Stack Overflow Developer Survey dataset](https://survey.stackoverflow.co).
 
 ## Current Setup
 
@@ -26,12 +26,6 @@ Local development URL:
 http://localhost:5173/
 ```
 
-Production preview URL after `npm run build && npm run preview`:
-
-```text
-http://localhost:4173/inf8808E-project-team10/
-```
-
 ## Data
 
 The app uses compact chart-ready summaries:
@@ -52,7 +46,7 @@ The app uses compact chart-ready summaries:
 - `public/data/analysis/industry_cohort_stats.csv`
 - `public/data/analysis/icorpm_adoption_composition.csv`
 
-The source subset was prepared from the Stack Overflow Developer Survey 2025 using the variables selected in the Team 10 mockup. The raw 49,191-row subset is intentionally not served by the website because the current visualizations use pre-aggregated denominators and rates.
+The source subset was prepared from the [public 2025 Stack Overflow Developer Survey dataset](https://survey.stackoverflow.co) using the variables selected in the Team 10 mockup. The raw 49,191-row subset is intentionally not served by the website because the current visualizations use pre-aggregated denominators and rates.
 
 To regenerate the chart-ready CSVs from the local raw subset:
 
@@ -61,8 +55,6 @@ python scripts/build_analysis_data.py \
   --input data/results.csv \
   --out public/data/analysis
 ```
-
-The original exploratory notebook from the data-analysis handoff is archived outside this repo at `../data/selected_files_20260611T153613.zip`. The script above is the cleaned reproducible version used for the final website CSVs.
 
 ## Visualization Plan
 

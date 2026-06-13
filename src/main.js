@@ -196,7 +196,7 @@ async function init() {
 
   setText(
     '#status',
-    'Ready. Rates are descriptive associations from Stack Overflow Developer Survey 2025.',
+    'Ready. Rates are descriptive associations from the 2025 Stack Overflow Developer Survey dataset.',
   )
 }
 

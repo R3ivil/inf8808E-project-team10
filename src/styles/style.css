@@ -397,6 +397,20 @@ p {
   line-height: 1.6;
 }
 
+.source-link {
+  color: var(--accent-deep);
+  font-weight: 700;
+  text-decoration-color: rgba(184, 137, 45, 0.65);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.source-link:hover,
+.source-link:focus {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
 .hero p:not(.eyebrow) {
   max-width: 840px;
   color: var(--muted);
