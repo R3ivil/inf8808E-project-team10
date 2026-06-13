@@ -6,13 +6,101 @@
     <title>Developer Profiles And AI Adoption</title>
   </head>
   <body>
+    <svg class="context-sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-gap" viewBox="0 0 64 64">
+        <path d="M10 46h44" />
+        <path d="M14 42V24" />
+        <path d="M26 42V14" />
+        <path d="M38 42V30" />
+        <path d="M50 42V20" />
+        <path d="M16 18l12 14 10-8 10 12" />
+        <circle cx="16" cy="18" r="3" />
+        <circle cx="28" cy="32" r="3" />
+        <circle cx="38" cy="24" r="3" />
+        <circle cx="48" cy="36" r="3" />
+      </symbol>
+      <symbol id="icon-stack" viewBox="0 0 64 64">
+        <path d="M12 18h40" />
+        <path d="M12 32h40" />
+        <path d="M12 46h40" />
+        <path d="M12 14h21v8H12z" />
+        <path d="M33 14h10v8H33z" />
+        <path d="M43 14h9v8h-9z" />
+        <path d="M12 28h30v8H12z" />
+        <path d="M42 28h6v8h-6z" />
+        <path d="M48 28h4v8h-4z" />
+        <path d="M12 42h24v8H12z" />
+        <path d="M36 42h8v8h-8z" />
+        <path d="M44 42h8v8h-8z" />
+      </symbol>
+      <symbol id="icon-agent" viewBox="0 0 64 64">
+        <rect x="18" y="18" width="28" height="28" rx="6" />
+        <path d="M26 12v6M38 12v6M26 46v6M38 46v6M12 26h6M12 38h6M46 26h6M46 38h6" />
+        <circle cx="27" cy="30" r="2.5" />
+        <circle cx="37" cy="30" r="2.5" />
+        <path d="M26 38c4 3 8 3 12 0" />
+      </symbol>
+      <symbol id="icon-matrix" viewBox="0 0 64 64">
+        <path d="M14 14h36v36H14z" />
+        <path d="M26 14v36M38 14v36M14 26h36M14 38h36" />
+        <path d="M15 15h10v10H15z" />
+        <path d="M39 27h10v10H39z" />
+        <path d="M27 39h10v10H27z" />
+      </symbol>
+      <symbol id="icon-frustration" viewBox="0 0 64 64">
+        <circle cx="29" cy="29" r="15" />
+        <path d="M40 40l10 10" />
+        <path d="M24 25h.01M34 25h.01" />
+        <path d="M23 35c4-3 8-3 12 0" />
+        <path d="M48 14l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" />
+      </symbol>
+      <symbol id="icon-human" viewBox="0 0 64 64">
+        <circle cx="20" cy="24" r="7" />
+        <circle cx="44" cy="24" r="7" />
+        <path d="M10 50c2-9 7-14 14-14s12 5 14 14" />
+        <path d="M30 50c2-9 7-14 14-14 5 0 9 3 12 8" />
+        <path d="M29 25h6" />
+        <path d="M32 22l3 3-3 3" />
+      </symbol>
+    </svg>
+
     <header class="site-header" id="top">
-      <div class="hero">
-        <p class="eyebrow">Stack Overflow Developer Survey 2025</p>
-        <h1>Developer AI adoption is high, but trust is uneven.</h1>
-        <p>
-          A guided D3 exploration for technical managers, training leads, and software professionals comparing developer profiles, work contexts, AI trust, frustrations, human-help needs, and agent readiness.
-        </p>
+      <div class="hero-shell">
+        <div class="hero">
+          <p class="eyebrow">Stack Overflow Developer Survey 2025</p>
+          <h1>Developer AI adoption is high, but trust is uneven.</h1>
+          <p>
+            A guided D3 exploration for technical managers, training leads, and software professionals comparing developer profiles, work contexts, AI trust, frustrations, human-help needs, and agent readiness.
+          </p>
+        </div>
+        <svg class="hero-visual" viewBox="0 0 420 270" role="img" aria-label="Abstract code, AI, and analytics illustration">
+          <defs>
+            <linearGradient id="hero-card" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="1" stop-color="#eef4ff" />
+            </linearGradient>
+            <linearGradient id="hero-accent" x1="0" x2="1">
+              <stop offset="0" stop-color="#b8892d" />
+              <stop offset="1" stop-color="#2454d6" />
+            </linearGradient>
+          </defs>
+          <path class="hero-visual-halo" d="M52 206c39-91 96-137 171-138 77-1 133 37 170 113-42 49-98 73-168 72-72-1-129-17-173-47z" />
+          <rect class="hero-window" x="48" y="48" width="232" height="154" rx="14" />
+          <path class="hero-window-bar" d="M48 78h232" />
+          <circle class="hero-dot gold" cx="70" cy="63" r="5" />
+          <circle class="hero-dot blue" cx="88" cy="63" r="5" />
+          <circle class="hero-dot gray" cx="106" cy="63" r="5" />
+          <path class="hero-code" d="M80 110h54M80 135h88M80 160h64" />
+          <path class="hero-code muted" d="M158 110h72M190 135h50M158 160h72" />
+          <path class="hero-chip" d="M308 88h56a14 14 0 0 1 14 14v56a14 14 0 0 1-14 14h-56a14 14 0 0 1-14-14v-56a14 14 0 0 1 14-14z" />
+          <path class="hero-circuit" d="M318 74v14M336 74v14M354 74v14M318 172v14M336 172v14M354 172v14M280 112h14M280 148h14M378 112h14M378 148h14" />
+          <circle class="hero-node" cx="324" cy="120" r="5" />
+          <circle class="hero-node" cx="350" cy="120" r="5" />
+          <path class="hero-smile" d="M322 146c9 8 19 8 29 0" />
+          <path class="hero-link" d="M248 96c30-18 48-16 70 2M248 176c32 18 52 15 79-10" />
+          <path class="hero-bars" d="M302 222v-28M326 222v-48M350 222v-34M374 222v-64" />
+          <path class="hero-axis" d="M288 222h98" />
+        </svg>
       </div>
       <div class="summary-grid" aria-label="Key baselines">
         <div>
@@ -44,6 +132,7 @@
 
         <section class="viz-section" id="v1">
           <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-gap"></use></svg>
             <p class="eyebrow">V1 - Adoption-trust gap</p>
             <h2>The strongest story is high use with low trust.</h2>
             <p>
@@ -68,6 +157,7 @@
 
         <section class="viz-section" id="v2">
           <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-stack"></use></svg>
             <p class="eyebrow">V2 - Adoption composition</p>
             <h2>Adoption mix changes across profile and work-context groups.</h2>
             <p id="composition-note">
@@ -95,6 +185,7 @@
 
         <section class="viz-section" id="v6">
           <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-agent"></use></svg>
             <p class="eyebrow">V6 - AI-agent readiness</p>
             <h2>Agent use is high enough to be a main section.</h2>
             <p>
@@ -112,6 +203,7 @@
 
         <section class="viz-section" id="v3">
           <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-matrix"></use></svg>
             <p class="eyebrow">V3 - Perception baseline</p>
             <h2>Different cohorts deviate in different ways.</h2>
             <p>
@@ -138,6 +230,7 @@
 
         <section class="viz-section" id="v4">
           <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-frustration"></use></svg>
             <p class="eyebrow">V4 - Frustration profile cards</p>
             <h2>The almost-right problem grows with use.</h2>
             <p>
@@ -151,6 +244,7 @@
 
         <section class="viz-section" id="v5">
           <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-human"></use></svg>
             <p class="eyebrow">V5 - Human-help situations</p>
             <h2>Human judgment remains part of the workflow.</h2>
             <p>
