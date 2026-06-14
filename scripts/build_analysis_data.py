@@ -473,7 +473,7 @@ def main() -> None:
     parser.add_argument(
         "--input",
         type=Path,
-        default=Path("../data/results.csv.csv"),
+        default=Path("../data/results.csv"),
         help="Path to the one-row-per-respondent project subset CSV.",
     )
     parser.add_argument(

@@ -1,13 +1,13 @@
 export const INITIAL_STATE = Object.freeze({
-  scope: 'Role',                  // global grouping for V1, V3, V6: 'Role' | 'Industry'
-  minValidN: 250,                 // global minimum valid n
-  v1Metric: 'Trust%',             // V1 second axis: 'Trust%' | 'ComplexConf%'
-  v2Tab: 'Profile',               // V2 small-multiple set: 'Profile' | 'Work context'
-  v2Sort: 'source',               // V2 row order: 'source' | 'AnyUser%' | 'Frequent%' | 'NonUser%'
-  v3SortMetric: 'Adoption',       // V3 sort metric
-  v5Grouping: 'Trust',            // V5 columns: 'Trust' | 'Confidence' | 'Adoption'
-  v6MaxRows: 12,                  // V6 row cap
-  pinnedCohorts: [],              // [{ id, source: 'role' | 'industry', label }]
+  scope: 'Role',                 
+  minValidN: 250,                 
+  v1Metric: 'Trust%',          
+  v2Tab: 'Profile',             
+  v2Sort: 'source',             
+  v3SortMetric: 'Adoption',     
+  v5Grouping: 'Trust',            
+  v6MaxRows: 12,                  
+  pinnedCohorts: [],              
 })
 
 export function createStore(initial = INITIAL_STATE) {
