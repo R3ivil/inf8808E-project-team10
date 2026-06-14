@@ -1,0 +1,16 @@
+group,n_group,n_AISelect,missing_AISelect,Daily%,Weekly%,Monthly%,Planned%,NonUser%,AnyUser%
+Fintech,1690,1478,212,53.7,20.0,12.7,4.1,9.6,86.3
+Retail and Consumer Services,1053,934,119,51.2,14.6,16.8,5.4,12.1,82.5
+Software Development,16282,14138,2144,53.0,17.0,12.0,4.4,13.7,81.9
+Media & Advertising Services,773,695,78,48.9,18.7,14.1,5.5,12.8,81.7
+Healthcare,1397,1237,160,49.1,18.5,13.4,5.3,13.7,81.0
+Insurance,434,391,43,43.5,19.4,17.9,4.3,14.8,80.8
+"Internet, Telecomm or Information Services",1698,1482,216,47.6,18.4,14.2,4.5,15.2,80.3
+"Transportation, or Supply Chain",910,810,100,46.0,17.0,15.3,5.6,16.0,78.4
+Banking/Financial Services,1437,1261,176,46.1,18.9,13.2,7.9,14.0,78.1
+Energy,742,666,76,42.0,21.2,14.4,5.9,16.5,77.6
+Computer Systems Design and Services,894,777,117,42.2,18.3,15.6,5.4,18.5,76.1
+Manufacturing,1315,1190,125,39.4,19.6,16.5,6.0,18.6,75.5
+Other:,2667,2375,292,42.4,18.0,15.2,5.2,19.2,75.5
+Higher Education,1167,1053,114,34.9,21.6,15.2,4.0,24.4,71.6
+Government,1183,1058,125,33.6,19.4,17.2,8.7,21.2,70.1

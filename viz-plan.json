@@ -1,0 +1,689 @@
+{
+  "project": {
+    "title": "Developer Profiles, Work Contexts, and AI Tool Adoption",
+    "context": "Generative AI tools are now part of many software development workflows, but adoption and confidence vary by developer profile, role, industry, organization size, and work arrangement. This project turns the Stack Overflow Developer Survey 2025 into a guided D3 exploration for comparing adoption, trust, perceived limits, frustrations, human-help needs, and AI-agent readiness across developer cohorts.",
+    "high_level_goal": "Help technical decision-makers identify which developer groups adopt AI tools, where trust or confidence gaps remain, and where training, review practices, or policy support may be needed.",
+    "d3_only": true,
+    "forbidden_libraries": [
+      "plotly",
+      "plotly.js",
+      "chart.js"
+    ]
+  },
+  "target_users": [
+    {
+      "id": "primary",
+      "name": "Technical team managers, training leads, technology decision-makers, and software development professionals",
+      "constraints": [
+        "Need quick comparisons without reading a 172-variable survey table",
+        "Understand software-development and AI vocabulary but have limited time",
+        "Use the site in Chrome on a standard screen",
+        "Need visible denominators, missing-data caveats, and accessible encodings"
+      ],
+      "use_context": "Use the standalone website to compare developer cohorts, discuss AI-tool adoption strategy, identify training needs, and reason about where human review remains important."
+    }
+  ],
+  "dataset": {
+    "source": "Stack Overflow Developer Survey 2025, collected through a self-administered online survey from May 29 to June 23, 2025 and distributed primarily through Stack Overflow channels. The project subset is derived from results.csv and schema.csv.",
+    "grain": "One row represents one survey respondent.",
+    "known_limits": [
+      "Voluntary survey responses are descriptive and not representative of all developers worldwide",
+      "Respondents are connected to the Stack Overflow ecosystem",
+      "AI-related questions have substantial non-response and NA values",
+      "Multi-select fields use semicolon-separated values and should not be interpreted as categories that sum to 100 percent",
+      "Associations are descriptive and should not be presented as causal effects"
+    ],
+    "variables": [
+      {
+        "name": "ResponseId",
+        "type": "quantitative",
+        "unit": "identifier",
+        "typical_range": "Unique respondent ids",
+        "notes": "Technical key only; not used as a visual measure."
+      },
+      {
+        "name": "Age",
+        "type": "ordinal",
+        "unit": "age group",
+        "typical_range": "Survey age bands plus missing markers",
+        "notes": "Main profile comparison variable."
+      },
+      {
+        "name": "EdLevel",
+        "type": "ordinal",
+        "unit": "education category",
+        "typical_range": "Formal education levels plus missing markers",
+        "notes": "Used for sentiment and trust comparisons."
+      },
+      {
+        "name": "YearsCode",
+        "type": "ordinal",
+        "unit": "years",
+        "typical_range": "Coding experience values plus special text categories",
+        "notes": "May need bucketing for readable cohort comparisons."
+      },
+      {
+        "name": "WorkExp",
+        "type": "ordinal",
+        "unit": "years",
+        "typical_range": "Professional experience values plus missing markers",
+        "notes": "May need junior/intermediate/senior buckets."
+      },
+      {
+        "name": "DevType",
+        "type": "categorical",
+        "unit": "role",
+        "typical_range": "Developer role categories",
+        "notes": "Primary cohort field for role-based comparisons."
+      },
+      {
+        "name": "OrgSize",
+        "type": "ordinal",
+        "unit": "organization-size band",
+        "typical_range": "Organization size categories plus missing markers",
+        "notes": "Work-context comparison field."
+      },
+      {
+        "name": "ICorPM",
+        "type": "categorical",
+        "unit": "role mode",
+        "typical_range": "Individual contributor, people manager, or missing markers",
+        "notes": "Compares contributor and manager perspectives."
+      },
+      {
+        "name": "RemoteWork",
+        "type": "categorical",
+        "unit": "work arrangement",
+        "typical_range": "Remote, hybrid, in-person, and missing markers",
+        "notes": "Work-context comparison field."
+      },
+      {
+        "name": "Industry",
+        "type": "categorical",
+        "unit": "industry",
+        "typical_range": "Industry categories plus missing markers",
+        "notes": "Used for adoption and trust comparisons."
+      },
+      {
+        "name": "AISelect",
+        "type": "ordinal",
+        "unit": "AI adoption category",
+        "typical_range": "Daily, weekly, monthly or infrequently, plan to use, do not plan to use, missing markers",
+        "notes": "Main adoption variable."
+      },
+      {
+        "name": "AISent",
+        "type": "ordinal",
+        "unit": "sentiment category",
+        "typical_range": "Favorable to unfavorable attitude categories plus missing markers",
+        "notes": "Broad AI attitude variable."
+      },
+      {
+        "name": "AIAcc",
+        "type": "ordinal",
+        "unit": "trust category",
+        "typical_range": "Agreement or confidence categories plus missing markers",
+        "notes": "Used to derive trust rates."
+      },
+      {
+        "name": "AIComplex",
+        "type": "ordinal",
+        "unit": "complex-task confidence category",
+        "typical_range": "Agreement or confidence categories plus missing markers",
+        "notes": "Used to derive complex-task confidence rates."
+      },
+      {
+        "name": "AIThreat",
+        "type": "categorical",
+        "unit": "threat perception category",
+        "typical_range": "Threat perception responses plus missing markers",
+        "notes": "Used for job-threat perception comparisons."
+      },
+      {
+        "name": "AIFrustration",
+        "type": "categorical",
+        "unit": "semicolon-separated multi-select responses",
+        "typical_range": "Frustration categories plus missing markers",
+        "notes": "Multi-select; percentages use valid respondent denominators and do not sum to 100 percent."
+      },
+      {
+        "name": "AIAgents",
+        "type": "ordinal",
+        "unit": "AI-agent use category",
+        "typical_range": "Agent use frequency categories plus missing markers",
+        "notes": "Agent-readiness variable with substantial missingness."
+      },
+      {
+        "name": "AIAgentChange",
+        "type": "ordinal",
+        "unit": "perceived work-change category",
+        "typical_range": "Perceived change categories plus missing markers",
+        "notes": "Paired with AIAgents for agent-readiness section."
+      },
+      {
+        "name": "AIHuman",
+        "type": "categorical",
+        "unit": "semicolon-separated multi-select responses",
+        "typical_range": "Human-help situations plus missing markers",
+        "notes": "Multi-select; percentages use valid respondent denominators and do not sum to 100 percent."
+      },
+      {
+        "name": "SOFriction",
+        "type": "ordinal",
+        "unit": "friction frequency category",
+        "typical_range": "Friction frequency responses plus missing markers",
+        "notes": "Optional supporting perception variable."
+      },
+      {
+        "name": "adoption_rate",
+        "type": "quantitative",
+        "unit": "percent of valid respondents",
+        "typical_range": "0 to 100",
+        "notes": "Derived from AISelect."
+      },
+      {
+        "name": "trust_rate",
+        "type": "quantitative",
+        "unit": "percent of valid respondents",
+        "typical_range": "0 to 100",
+        "notes": "Derived from AIAcc."
+      },
+      {
+        "name": "complex_confidence_rate",
+        "type": "quantitative",
+        "unit": "percent of valid respondents",
+        "typical_range": "0 to 100",
+        "notes": "Derived from AIComplex."
+      },
+      {
+        "name": "job_threat_rate",
+        "type": "quantitative",
+        "unit": "percent of valid respondents",
+        "typical_range": "0 to 100",
+        "notes": "Derived from AIThreat."
+      },
+      {
+        "name": "agent_use_rate",
+        "type": "quantitative",
+        "unit": "percent of valid respondents",
+        "typical_range": "0 to 100",
+        "notes": "Derived from AIAgents."
+      },
+      {
+        "name": "agent_change_rate",
+        "type": "quantitative",
+        "unit": "percent of valid respondents",
+        "typical_range": "0 to 100",
+        "notes": "Derived from AIAgentChange."
+      },
+      {
+        "name": "baseline_difference",
+        "type": "quantitative",
+        "unit": "percentage points",
+        "typical_range": "-100 to 100",
+        "notes": "Cohort rate minus overall survey baseline."
+      },
+      {
+        "name": "valid_n",
+        "type": "quantitative",
+        "unit": "respondents",
+        "typical_range": "0 to 49191",
+        "notes": "Denominator for each rate."
+      },
+      {
+        "name": "missing_n",
+        "type": "quantitative",
+        "unit": "respondents",
+        "typical_range": "0 to 49191",
+        "notes": "Missing or NA count for each rate."
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "q_v1",
+      "priority": 1,
+      "user_id": "primary",
+      "question": "Do developer roles and industries that use AI tools also trust their accuracy or complex-task performance?",
+      "task": "compare",
+      "why_it_matters": "Managers need to know where high adoption still requires review practices, training, or policy support."
+    },
+    {
+      "id": "q_v2",
+      "priority": 2,
+      "user_id": "primary",
+      "question": "How is AI adoption distributed across profile and work-context groups?",
+      "task": "part-to-whole",
+      "why_it_matters": "Experience and manager/contributor splits show clearer adoption patterns than RemoteWork or OrgSize, so the first version prioritizes YearsCode, Age, Role, and ICorPM."
+    },
+    {
+      "id": "q_v3",
+      "priority": 4,
+      "user_id": "primary",
+      "question": "Which cohorts differ most from the overall survey baseline on adoption, trust, confidence, and job-threat perception?",
+      "task": "multidimensional",
+      "why_it_matters": "A compact diagnostic view helps users spot cohorts that need attention without scanning many separate charts."
+    },
+    {
+      "id": "q_v4",
+      "priority": 5,
+      "user_id": "primary",
+      "question": "Which AI frustrations dominate, and how do they vary by adoption group or selected cohort?",
+      "task": "compare",
+      "why_it_matters": "Frustration categories translate broad caution into concrete training and workflow issues."
+    },
+    {
+      "id": "q_v5",
+      "priority": 6,
+      "user_id": "primary",
+      "question": "Where do developers still prefer human help, and how does this vary by trust or confidence group?",
+      "task": "multidimensional",
+      "why_it_matters": "The project should show that adoption does not eliminate the need for human judgment."
+    },
+    {
+      "id": "q_v6",
+      "priority": 3,
+      "user_id": "primary",
+      "question": "Which profiles use AI agents, and is agent use associated with perceived change in development work?",
+      "task": "compare",
+      "why_it_matters": "Agent readiness is useful for deciding whether teams are ready for more autonomous AI workflows."
+    }
+  ],
+  "visualizations": [
+    {
+      "id": "v1_adoption_trust_gap",
+      "title": "Adoption-Trust Gap By Cohort",
+      "target_user": "primary",
+      "question": "q_v1",
+      "task": "Compare two percentage rates for the same cohort and rank cohorts by the gap",
+      "takeaway": "High-adoption cohorts may still have lower trust or complex-task confidence, revealing where governance or review support is needed.",
+      "chart_type": "connected-dot chart",
+      "d3_component": "AdoptionTrustGapChart",
+      "data_variables": [
+        "DevType",
+        "Industry",
+        "AISelect",
+        "AIAcc",
+        "AIComplex",
+        "adoption_rate",
+        "trust_rate",
+        "complex_confidence_rate",
+        "valid_n",
+        "missing_n"
+      ],
+      "encoding": {
+        "x": "Percent on a shared 0 to 100 scale",
+        "y": "Cohort category such as DevType or Industry",
+        "color": "Two color-blind-safe hues for adoption and trust or confidence",
+        "size": "none",
+        "shape": "Dot plus connecting segment",
+        "text": "Direct percentage labels, valid n, and missing n in detail view",
+        "facets": "none"
+      },
+      "integrity_checks": {
+        "bar_baseline_zero": null,
+        "uses_3d": false,
+        "normalized_if_needed": true,
+        "units_visible": true,
+        "missing_data_handled": true,
+        "aggregation_stated": true,
+        "uncertainty_shown_if_needed": true,
+        "map_geography_is_relevant": null,
+        "map_value_kind": "not_a_map"
+      },
+      "accessibility_checks": {
+        "colorblind_safe": true,
+        "not_color_only": true,
+        "direct_labels_or_clear_legend": true,
+        "readable_text": true,
+        "keyboard_or_non_hover_access": true
+      },
+      "interaction": {
+        "enabled": true,
+        "purpose": "Switch grouping variable and switch the second dot between trust and complex-task confidence",
+        "state_visible": "Active grouping and metric labels remain visible above the chart",
+        "reset_available": "Reset button returns to DevType and trust metric"
+      },
+      "alternatives_considered": [
+        {
+          "chart_type": "Grouped bar chart",
+          "why_rejected": "It makes the gap less visually direct and adds extra ink for the same two-rate comparison."
+        }
+      ],
+      "risks": [
+        {
+          "misinterpretation": "Users may read a gap as causal evidence that adoption lowers trust.",
+          "prevention": "Label results as descriptive associations and show valid denominators for both rates."
+        }
+      ]
+    },
+    {
+      "id": "v2_adoption_composition",
+      "title": "AI Adoption Composition Across Profiles And Work Contexts",
+      "target_user": "primary",
+      "question": "q_v2",
+      "task": "Compare the full composition of ordered AISelect categories across groups",
+      "takeaway": "Groups differ not only in whether they use AI, but in the balance between daily, weekly, occasional, planned, and non-use.",
+      "chart_type": "100-percent-stacked-bar",
+      "d3_component": "AdoptionCompositionChart",
+      "data_variables": [
+        "Age",
+        "YearsCode",
+        "DevType",
+        "ICorPM",
+        "AISelect",
+        "valid_n",
+        "missing_n"
+      ],
+      "encoding": {
+        "x": "Percent on a 0 to 100 scale",
+        "y": "Profile or work-context category",
+        "color": "Ordered AISelect categories using a color-blind-safe categorical palette",
+        "size": "none",
+        "shape": "Horizontal stacked bar segments",
+        "text": "Percent labels when space permits plus detail panel for count and denominator",
+        "facets": "Tabs for years of coding experience, age, role, and manager versus contributor status"
+      },
+      "integrity_checks": {
+        "bar_baseline_zero": true,
+        "uses_3d": false,
+        "normalized_if_needed": true,
+        "units_visible": true,
+        "missing_data_handled": true,
+        "aggregation_stated": true,
+        "uncertainty_shown_if_needed": true,
+        "map_geography_is_relevant": null,
+        "map_value_kind": "not_a_map"
+      },
+      "accessibility_checks": {
+        "colorblind_safe": true,
+        "not_color_only": true,
+        "direct_labels_or_clear_legend": true,
+        "readable_text": true,
+        "keyboard_or_non_hover_access": true
+      },
+      "interaction": {
+        "enabled": true,
+        "purpose": "Switch profile or work-context tab, sort unordered categories, and pin a cohort",
+        "state_visible": "Active tab, sort mode, and pinned cohort are visibly indicated",
+        "reset_available": "Reset button clears pinned cohort and restores default sort"
+      },
+      "alternatives_considered": [
+        {
+          "chart_type": "Single adoption-rate bar chart",
+          "why_rejected": "It hides the difference between daily, weekly, occasional, planned, and non-use categories."
+        }
+      ],
+      "risks": [
+        {
+          "misinterpretation": "Users may compare tiny groups as if they were equally reliable.",
+          "prevention": "Show valid n, missing n, and de-emphasize RemoteWork and OrgSize because analysis found low visual separation."
+        }
+      ]
+    },
+    {
+      "id": "v6_agent_readiness",
+      "title": "AI-Agent Readiness By Cohort",
+      "target_user": "primary",
+      "question": "q_v6",
+      "task": "Compare AI-agent use with perceived work change for the same cohort",
+      "takeaway": "AI-agent readiness is a core adoption story: AI/ML engineers, founders, senior executives, and managers show high agent use and stronger reported work change.",
+      "chart_type": "paired-dot panel",
+      "d3_component": "AgentReadinessPanel",
+      "data_variables": [
+        "AIAgents",
+        "AIAgentChange",
+        "DevType",
+        "Industry",
+        "WorkExp",
+        "agent_use_rate",
+        "agent_change_rate",
+        "valid_n",
+        "missing_n"
+      ],
+      "encoding": {
+        "x": "Percent on a shared 0 to 100 scale",
+        "y": "Cohort category",
+        "color": "Two color-blind-safe hues for agent use and perceived work change",
+        "size": "none",
+        "shape": "Paired dots with optional connecting segment",
+        "text": "Direct percentage labels and valid denominators",
+        "facets": "none"
+      },
+      "integrity_checks": {
+        "bar_baseline_zero": null,
+        "uses_3d": false,
+        "normalized_if_needed": true,
+        "units_visible": true,
+        "missing_data_handled": true,
+        "aggregation_stated": true,
+        "uncertainty_shown_if_needed": true,
+        "map_geography_is_relevant": null,
+        "map_value_kind": "not_a_map"
+      },
+      "accessibility_checks": {
+        "colorblind_safe": true,
+        "not_color_only": true,
+        "direct_labels_or_clear_legend": true,
+        "readable_text": true,
+        "keyboard_or_non_hover_access": true
+      },
+      "interaction": {
+        "enabled": true,
+        "purpose": "Switch grouping field and reveal valid denominators for both agent metrics",
+        "state_visible": "Active grouping field and low-n warnings are displayed",
+        "reset_available": "Reset button restores role grouping"
+      },
+      "alternatives_considered": [
+        {
+          "chart_type": "Scatterplot of agent use versus work change",
+          "why_rejected": "Scatterplots are less consistent with V1 and make row-by-row cohort comparison harder for this guided story."
+        }
+      ],
+      "risks": [
+        {
+          "misinterpretation": "Users may trust agent findings even when response counts are low.",
+          "prevention": "Hide or de-emphasize cohorts below the low-n threshold and show missing counts prominently."
+        }
+      ]
+    },
+    {
+      "id": "v3_baseline_difference_matrix",
+      "title": "Perception Differences From The Survey Baseline",
+      "target_user": "primary",
+      "question": "q_v3",
+      "task": "Compare each cohort against the overall baseline across several metrics",
+      "takeaway": "Cohorts that look average on adoption may still stand out on trust, complex-task confidence, sentiment, or job-threat concern.",
+      "chart_type": "colored difference matrix",
+      "d3_component": "BaselineDifferenceMatrix",
+      "data_variables": [
+        "DevType",
+        "Industry",
+        "ICorPM",
+        "AISelect",
+        "AISent",
+        "AIAcc",
+        "AIComplex",
+        "AIThreat",
+        "adoption_rate",
+        "trust_rate",
+        "complex_confidence_rate",
+        "job_threat_rate",
+        "baseline_difference",
+        "valid_n",
+        "missing_n"
+      ],
+      "encoding": {
+        "x": "Perception metric",
+        "y": "Selected cohort",
+        "color": "Diverging color scale centered on zero percentage-point difference from baseline",
+        "size": "none",
+        "shape": "Matrix cells",
+        "text": "Signed percentage-point labels and valid n in detail view",
+        "facets": "none"
+      },
+      "integrity_checks": {
+        "bar_baseline_zero": null,
+        "uses_3d": false,
+        "normalized_if_needed": true,
+        "units_visible": true,
+        "missing_data_handled": true,
+        "aggregation_stated": true,
+        "uncertainty_shown_if_needed": true,
+        "map_geography_is_relevant": null,
+        "map_value_kind": "not_a_map"
+      },
+      "accessibility_checks": {
+        "colorblind_safe": true,
+        "not_color_only": true,
+        "direct_labels_or_clear_legend": true,
+        "readable_text": true,
+        "keyboard_or_non_hover_access": true
+      },
+      "interaction": {
+        "enabled": true,
+        "purpose": "Change grouping variable, reorder rows by selected metric, and inspect cell denominators",
+        "state_visible": "Selected metric, grouping variable, and row order are shown above the matrix",
+        "reset_available": "Reset button restores default selected cohorts and metric order"
+      },
+      "alternatives_considered": [
+        {
+          "chart_type": "Multiple separate bar charts",
+          "why_rejected": "Separate charts make cross-metric cohort comparison slower and consume too much vertical space."
+        }
+      ],
+      "risks": [
+        {
+          "misinterpretation": "Users may overread small percentage-point differences.",
+          "prevention": "Use muted color near zero, show exact differences, and surface valid n for each cell."
+        }
+      ]
+    },
+    {
+      "id": "v4_frustration_profiles",
+      "title": "AI Frustrations By Adoption Group",
+      "target_user": "primary",
+      "question": "q_v4",
+      "task": "Compare how top multi-select frustration percentages change from occasional to daily AI users",
+      "takeaway": "The dominant frustration, almost-right AI output, increases with heavier AI use, so mature adopters need review and debugging practices rather than only onboarding.",
+      "chart_type": "line chart with small-multiple rows",
+      "d3_component": "FrustrationProfiles",
+      "data_variables": [
+        "AISelect",
+        "AIFrustration",
+        "DevType",
+        "WorkExp",
+        "valid_n",
+        "missing_n"
+      ],
+      "encoding": {
+        "x": "Percent of valid AIFrustration respondents on a visible 0 to 85 percent axis",
+        "y": "Frustration category, one horizontal row per category",
+        "color": "Adoption group or pinned cohort with redundant card headings",
+        "size": "none",
+        "shape": "Lines connect occasional, weekly, and daily user points within each frustration row",
+        "text": "Percent labels and valid denominator",
+        "facets": "Small-multiple rows by frustration category"
+      },
+      "integrity_checks": {
+        "bar_baseline_zero": true,
+        "uses_3d": false,
+        "normalized_if_needed": true,
+        "units_visible": true,
+        "missing_data_handled": true,
+        "aggregation_stated": true,
+        "uncertainty_shown_if_needed": true,
+        "map_geography_is_relevant": null,
+        "map_value_kind": "not_a_map"
+      },
+      "accessibility_checks": {
+        "colorblind_safe": true,
+        "not_color_only": true,
+        "direct_labels_or_clear_legend": true,
+        "readable_text": true,
+        "keyboard_or_non_hover_access": true
+      },
+      "interaction": {
+        "enabled": true,
+        "purpose": "Hover or keyboard focus reveals exact value, valid denominator, and multi-select caveat for each point",
+        "state_visible": "No persistent filter state; values and the percent axis remain visible in the static view",
+        "reset_available": "No persistent state is changed, so moving focus away returns to the default view"
+      },
+      "alternatives_considered": [
+        {
+          "chart_type": "Stacked bar chart",
+          "why_rejected": "Multi-select categories do not sum to 100 percent, so stacked bars would imply a false part-to-whole relationship."
+        }
+      ],
+      "risks": [
+        {
+          "misinterpretation": "Users may assume multi-select frustration shares sum to 100 percent.",
+          "prevention": "Label the field as multi-select and state that each percentage uses the valid respondent denominator."
+        }
+      ]
+    },
+    {
+      "id": "v5_human_help_matrix",
+      "title": "Human-Help Situations By Trust Group",
+      "target_user": "primary",
+      "question": "q_v5",
+      "task": "Compare multi-select human-help situations across trust, confidence, or adoption groups",
+      "takeaway": "Even groups that adopt AI tools still prefer human help for specific tasks where judgment, accountability, or context matters.",
+      "chart_type": "colored matrix",
+      "d3_component": "HumanHelpMatrix",
+      "data_variables": [
+        "AIHuman",
+        "AIAcc",
+        "AIComplex",
+        "AISelect",
+        "valid_n",
+        "missing_n"
+      ],
+      "encoding": {
+        "x": "Trust, confidence, or adoption group",
+        "y": "Human-help situation",
+        "color": "Sequential color scale for percent of valid respondents",
+        "size": "none",
+        "shape": "Matrix cells",
+        "text": "Direct percentage labels with count and denominator in detail view",
+        "facets": "none"
+      },
+      "integrity_checks": {
+        "bar_baseline_zero": null,
+        "uses_3d": false,
+        "normalized_if_needed": true,
+        "units_visible": true,
+        "missing_data_handled": true,
+        "aggregation_stated": true,
+        "uncertainty_shown_if_needed": true,
+        "map_geography_is_relevant": null,
+        "map_value_kind": "not_a_map"
+      },
+      "accessibility_checks": {
+        "colorblind_safe": true,
+        "not_color_only": true,
+        "direct_labels_or_clear_legend": true,
+        "readable_text": true,
+        "keyboard_or_non_hover_access": true
+      },
+      "interaction": {
+        "enabled": true,
+        "purpose": "Switch column grouping between trust, complex-task confidence, and adoption status",
+        "state_visible": "Active grouping and multi-select denominator are displayed",
+        "reset_available": "Reset button returns to AIAcc trust grouping"
+      },
+      "alternatives_considered": [
+        {
+          "chart_type": "Grouped bars for every human-help situation",
+          "why_rejected": "Grouped bars would be too wide and harder to scan for cross-group patterns."
+        }
+      ],
+      "risks": [
+        {
+          "misinterpretation": "Users may treat human-help categories as mutually exclusive.",
+          "prevention": "Label AIHuman as multi-select and avoid stacked part-to-whole encodings."
+        }
+      ]
+    }
+  ]
+}

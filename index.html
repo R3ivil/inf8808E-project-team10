@@ -3,22 +3,255 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Tool Adoption — Stack Overflow 2025</title>
-    <link rel="stylesheet" href="/src/styles/style.css" />
+    <title>Developer Profiles And AI Adoption</title>
   </head>
   <body>
-    <header>
-      <h1>AI Tool Adoption Among Developers</h1>
-      <p>Stack Overflow Developer Survey 2025</p>
+    <svg class="context-sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-gap" viewBox="0 0 64 64">
+        <path d="M10 46h44" />
+        <path d="M14 42V24" />
+        <path d="M26 42V14" />
+        <path d="M38 42V30" />
+        <path d="M50 42V20" />
+        <path d="M16 18l12 14 10-8 10 12" />
+        <circle cx="16" cy="18" r="3" />
+        <circle cx="28" cy="32" r="3" />
+        <circle cx="38" cy="24" r="3" />
+        <circle cx="48" cy="36" r="3" />
+      </symbol>
+      <symbol id="icon-stack" viewBox="0 0 64 64">
+        <path d="M12 18h40" />
+        <path d="M12 32h40" />
+        <path d="M12 46h40" />
+        <path d="M12 14h21v8H12z" />
+        <path d="M33 14h10v8H33z" />
+        <path d="M43 14h9v8h-9z" />
+        <path d="M12 28h30v8H12z" />
+        <path d="M42 28h6v8h-6z" />
+        <path d="M48 28h4v8h-4z" />
+        <path d="M12 42h24v8H12z" />
+        <path d="M36 42h8v8h-8z" />
+        <path d="M44 42h8v8h-8z" />
+      </symbol>
+      <symbol id="icon-agent" viewBox="0 0 64 64">
+        <rect x="18" y="18" width="28" height="28" rx="6" />
+        <path d="M26 12v6M38 12v6M26 46v6M38 46v6M12 26h6M12 38h6M46 26h6M46 38h6" />
+        <circle cx="27" cy="30" r="2.5" />
+        <circle cx="37" cy="30" r="2.5" />
+        <path d="M26 38c4 3 8 3 12 0" />
+      </symbol>
+      <symbol id="icon-matrix" viewBox="0 0 64 64">
+        <path d="M14 14h36v36H14z" />
+        <path d="M26 14v36M38 14v36M14 26h36M14 38h36" />
+        <path d="M15 15h10v10H15z" />
+        <path d="M39 27h10v10H39z" />
+        <path d="M27 39h10v10H27z" />
+      </symbol>
+      <symbol id="icon-frustration" viewBox="0 0 64 64">
+        <circle cx="29" cy="29" r="15" />
+        <path d="M40 40l10 10" />
+        <path d="M24 25h.01M34 25h.01" />
+        <path d="M23 35c4-3 8-3 12 0" />
+        <path d="M48 14l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" />
+      </symbol>
+      <symbol id="icon-human" viewBox="0 0 64 64">
+        <circle cx="20" cy="24" r="7" />
+        <circle cx="44" cy="24" r="7" />
+        <path d="M10 50c2-9 7-14 14-14s12 5 14 14" />
+        <path d="M30 50c2-9 7-14 14-14 5 0 9 3 12 8" />
+        <path d="M29 25h6" />
+        <path d="M32 22l3 3-3 3" />
+      </symbol>
+    </svg>
+
+    <header class="site-header" id="top">
+      <div class="hero-shell">
+        <div class="hero">
+            <p class="eyebrow">Stack Overflow Developer Survey 2025 — Team 10</p>
+            <h1>Who's actually using AI, and do they trust it?</h1>
+            <p>
+              An interactive exploration of how developer profiles and work contexts shape
+              AI tool adoption across 49,000+ respondents worldwide.
+            </p>
+        </div>
+      </div>
+      <div class="summary-grid" aria-label="Key baselines">
+        <div>
+          <strong>78.5%</strong>
+          <span>of developers use AI tools at work</span>
+        </div>
+        <div>
+          <strong>32.8%</strong>
+          <span>actually trust what AI outputs</span>
+        </div>
+        <div>
+          <strong>30.9%</strong>
+          <span>have adopted autonomous AI agents</span>
+        </div>
+        <div>
+          <strong>66%</strong>
+          <span>say AI answers are "almost right, but not quite"</span>
+        </div>
+      </div>
     </header>
-    <main id="app">
-      <section id="v2">
-        <h2>AI Adoption by Developer Profile</h2>
-        <div id="tabs"></div>
-        <div id="chart"></div>
-      </section>
-    </main>
-    <div id="tooltip"></div>
+
+    <div id="global-controls" class="global-controls" aria-label="Population scope and global filters"></div>
+
+    <div class="page-layout">
+      <nav id="side-nav" class="side-nav" aria-label="Section navigation"></nav>
+
+      <main>
+        <p class="status" id="status">Loading...</p>
+
+        <section class="viz-section" id="v1">
+          <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-gap"></use></svg>
+            <p class="eyebrow">V1 - Adoption-trust gap</p>
+            <h2>High adoption, but trust hasn't caught up.</h2>
+            <p>
+              Infrastructure-oriented roles use AI heavily but trust it less than front-end, mobile, and AI/ML roles. The chart compares adoption against either trust or complex-task confidence on the same 0-100% scale.
+            </p>
+            <p class="hint">Tip: hover a row label to see Pin or Unpin, then click it to compare that cohort across charts.</p>
+            <label class="control-label" for="gap-metric">Second metric</label>
+            <div class="control-row">
+              <select id="gap-metric" aria-label="Adoption-trust second metric">
+                <option value="Trust%">Trust accuracy</option>
+                <option value="ComplexConf%">Complex confidence</option>
+              </select>
+            </div>
+            <div class="control-row">
+              <span class="state-pill" id="gap-state">trust</span>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div id="v1-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v2">
+          <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-stack"></use></svg>
+            <p class="eyebrow">V2 - Adoption composition</p>
+            <h2>Adoption patterns vary by role, age, and work context.</h2>
+            <p id="composition-note">
+              Use tabs to switch between profile and work-context panels. Sort unordered groups and pin role cohorts for cross-chart comparison.
+            </p>
+            <div class="tabs" aria-label="Adoption composition panel set">
+              <button class="tab-btn active" type="button" data-v2-tab="Profile">Profile</button>
+              <button class="tab-btn" type="button" data-v2-tab="Work context">Work context</button>
+            </div>
+            <label class="control-label" for="composition-sort">Sort rows</label>
+            <select id="composition-sort">
+              <option value="source">Survey order</option>
+              <option value="AnyUser%">AI users</option>
+              <option value="Frequent%">Frequent users</option>
+              <option value="NonUser%">Non-users</option>
+            </select>
+            <div class="control-row">
+              <span class="state-pill" id="composition-state">Profile; order survey</span>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div id="v2-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v3">
+          <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-matrix"></use></svg>
+            <p class="eyebrow">V3 - Perception baseline</p>
+            <h2>Some groups use AI more but trust it less.</h2>
+            <p>
+              The matrix compares each cohort to the survey baseline. This makes the infrastructure paradox visible: adoption is near or above baseline, while trust and complex-task confidence sit below baseline.
+            </p>
+            <p class="hint">Tip: hover a row label to see Pin or Unpin, then click it to compare that cohort across charts.</p>
+            <label class="control-label" for="baseline-sort">Matrix sort</label>
+            <div class="control-row">
+                <select id="baseline-sort" aria-label="Baseline sort metric">
+                <option value="Adoption">Adoption</option>
+                <option value="Trust">Trust</option>
+                <option value="Complex confidence">Complex confidence</option>
+                <option value="Job-threat concern">Job-threat concern</option>
+              </select>
+            </div>
+            <div class="control-row">
+              <span class="state-pill" id="baseline-state">Sorted by Adoption</span>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div id="v3-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v4">
+          <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-frustration"></use></svg>
+            <p class="eyebrow">V4 - Frustration profile cards</p>
+            <h2>The main frustration: AI that's close, but not quite right.</h2>
+            <p>
+              The top frustration is not only an onboarding issue. Daily users report almost-right AI outputs more often than occasional users, which points to review and debugging needs for mature adopters.
+            </p>
+          </div>
+          <div class="chart-card">
+            <div id="v4-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v5">
+          <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-human"></use></svg>
+            <p class="eyebrow">V5 - Human-help situations</p>
+            <h2>Developers still turn to people in many situations.</h2>
+            <p>
+              Even respondents who highly trust AI still prefer people for some tasks. This closes the story by showing where teams still need review, mentorship, and shared judgment.
+            </p>
+            <label class="control-label" for="human-grouping">Column grouping</label>
+            <select id="human-grouping">
+              <option value="Trust">Trust</option>
+              <option value="Confidence">Complex-task confidence</option>
+              <option value="Adoption">Adoption status</option>
+            </select>
+            <div class="control-row">
+              <span class="state-pill" id="human-state">Grouped by trust</span>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div id="v5-chart"></div>
+          </div>
+        </section>
+
+        <section class="viz-section" id="v6">
+          <div class="section-copy">
+            <svg class="section-glyph" aria-hidden="true" focusable="false"><use href="#icon-agent"></use></svg>
+            <p class="eyebrow">V6 - AI-agent readiness</p>
+            <h2>AI agent adoption is growing, especially among senior roles.</h2>
+            <p>
+              AI/ML engineers, founders, senior executives, and managers lead agent adoption. This section appears early because agent workflows help explain perceived changes in development work.
+            </p>
+            <p class="hint">Tip: hover a row label to see Pin or Unpin, then click it to compare that cohort across charts.</p>
+            <div class="control-row">
+              <span class="state-pill" id="agent-state">Top cohorts by agent use</span>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div id="v6-chart"></div>
+          </div>
+        </section>
+
+        <section class="method-note" aria-label="Methodological notes">
+          <h2>Methodological notes</h2>
+          <p>
+            This independent class project visualizes derived aggregates from the
+            <a class="source-link" href="https://survey.stackoverflow.co" target="_blank" rel="noreferrer">public 2025 Stack Overflow Developer Survey dataset</a>.
+            Results are descriptive associations, not causal evidence. Missing and NA responses are excluded from chart denominators, and multi-select fields do not sum to 100%.
+          </p>
+        </section>
+      </main>
+
+      <aside id="cohort-workspace" class="cohort-workspace" aria-label="Pinned cohorts"></aside>
+    </div>
+
+    <div id="tooltip" role="status"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

@@ -1,0 +1,16 @@
+Industry,group,n_group,n_AISelect,missing_AISelect,AnyUser%,Frequent%,n_Trust,missing_Trust,Trust%,n_Complex,missing_Complex,ComplexConf%,n_Sent,missing_Sent,Favorable%,n_Threat,missing_Threat,Threat%,n_Agent,missing_Agent,AgentUser%,AdoptTrustGap,AdoptComplexGap
+Fintech,Fintech,1690,1478,212,86.3,73.7,1457,233,35.3,1459,231,30.9,1467,223,67.6,1598,92,15.1,1407,283,36.4,51.0,55.4
+Retail and Consumer Services,Retail and Consumer Services,1053,934,119,82.5,65.7,924,129,34.5,924,129,26.8,930,123,62.2,1013,40,14.6,887,166,31.6,48.0,55.7
+Software Development,Software Development,16282,14138,2144,81.9,69.9,13959,2323,34.0,13956,2326,31.4,14035,2247,63.0,15239,1043,15.1,13395,2887,35.2,47.9,50.5
+Media & Advertising Services,Media & Advertising Services,773,695,78,81.7,67.6,689,84,32.7,687,86,29.4,692,81,58.4,741,32,18.5,659,114,34.6,49.0,52.3
+Healthcare,Healthcare,1397,1237,160,81.0,67.6,1227,170,33.0,1226,171,29.1,1231,166,61.9,1319,78,13.8,1181,216,29.8,48.0,51.9
+Insurance,Insurance,434,391,43,80.8,62.9,389,45,31.6,390,44,29.2,390,44,60.3,417,17,12.7,376,58,27.4,49.2,51.6
+"Internet, Telecomm or Information Services","Internet, Telecomm or Information Services",1698,1482,216,80.3,66.1,1472,226,34.2,1470,228,31.2,1479,219,61.7,1614,84,16.5,1421,277,30.0,46.1,49.1
+"Transportation, or Supply Chain","Transportation, or Supply Chain",910,810,100,78.4,63.1,804,106,28.6,802,108,24.7,804,106,60.1,865,45,12.4,776,134,27.2,49.8,53.7
+Banking/Financial Services,Banking/Financial Services,1437,1261,176,78.1,64.9,1247,190,35.9,1245,192,32.7,1252,185,64.5,1369,68,14.9,1197,240,28.5,42.2,45.4
+Energy,Energy,742,666,76,77.6,63.2,659,83,31.3,658,84,25.5,660,82,59.8,707,35,11.5,632,110,27.2,46.3,52.1
+Computer Systems Design and Services,Computer Systems Design and Services,894,777,117,76.1,60.5,769,125,32.9,766,128,29.9,773,121,57.1,852,42,11.9,745,149,33.3,43.2,46.2
+Manufacturing,Manufacturing,1315,1190,125,75.5,59.0,1181,134,29.3,1179,136,25.2,1184,131,55.5,1265,50,10.3,1133,182,23.4,46.2,50.3
+Other:,Other:,2667,2375,292,75.5,60.3,2355,312,29.1,2363,304,26.6,2367,300,57.7,2539,128,11.7,2273,394,26.3,46.4,48.9
+Higher Education,Higher Education,1167,1053,114,71.6,56.4,1049,118,25.6,1050,117,25.7,1049,118,52.2,1128,39,11.4,1016,151,24.9,46.0,45.9
+Government,Government,1183,1058,125,70.1,52.9,1049,134,29.9,1047,136,25.8,1051,132,54.8,1139,44,13.6,1004,179,20.6,40.2,44.3
