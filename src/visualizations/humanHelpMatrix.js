@@ -100,8 +100,13 @@ export function renderHumanHelpMatrix(container, { data, grouping = 'Trust' }) {
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
   const x = d3.scaleBand().domain(rows.map((d) => d.group)).range([0, cellW * rows.length])
   const y = d3.scaleBand().domain(SITUATIONS).range([0, cellH * SITUATIONS.length])
-  const color = d3.scaleSequential([0, 86], d3.interpolateBlues)
-
+  const color = d3.scaleSequential([30, 90], d3.interpolateRgbBasis([
+    '#ea580c',
+    '#fb923c',
+    '#e2e8f0',
+    '#60a5fa',
+    '#1d4ed8',
+  ]))
   const rects = g.selectAll('rect.help-cell')
     .data(cells)
     .join('rect')
