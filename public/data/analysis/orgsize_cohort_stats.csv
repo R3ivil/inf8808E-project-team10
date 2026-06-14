@@ -1,0 +1,9 @@
+group,n_group,n_AISelect,missing_AISelect,Daily%,Weekly%,Monthly%,Planned%,NonUser%,AnyUser%
+"Just me - I am a freelancer, sole proprietor, etc.",1763,1321,442,50.9,14.5,12.3,6.9,15.3,77.8
+Less than 20 employees,5600,4306,1294,53.9,16.1,12.0,3.4,14.5,82.0
+20 to 99 employees,6688,5215,1473,52.7,16.7,12.6,4.0,14.0,82.0
+100 to 499 employees,6109,4854,1255,48.1,18.3,14.5,4.6,14.5,80.9
+500 to 999 employees,2361,1877,484,45.7,18.3,14.3,5.5,16.1,78.3
+"1,000 to 4,999 employees",4156,3321,835,44.2,21.5,14.7,5.6,14.0,80.4
+"5,000 to 9,999 employees",1604,1293,311,45.1,20.8,13.3,5.5,15.3,79.2
+"10,000 or more employees",4965,3934,1031,44.4,19.1,14.7,6.4,15.4,78.3

@@ -1,0 +1,6 @@
+group,n_group,n_resp,missing_AIHuman,When I don’t trust AI’s answers,When I have ethical or security concerns about code,When I want to fully understand something,When I want to learn best practices,When I’m stuck and can’t explain the problem,When I need help fixing complex or unfamiliar code,When I want to compare different solutions,When I need quick help troubleshooting,I don’t think I’ll need help from people anymore
+Highly distrust,6533,5936,597,83.0,71.9,71.7,67.9,58.1,60.4,53.6,38.5,2.8
+Somewhat distrust,8685,7790,895,83.7,68.5,66.5,62.6,54.6,52.4,45.4,26.6,2.5
+Neither trust nor distrust,7162,6129,1033,72.6,58.3,58.0,55.7,53.1,46.6,42.6,24.1,4.0
+Somewhat trust,9869,8461,1408,67.7,53.4,53.5,51.1,53.6,43.7,39.0,23.1,5.8
+Highly trust,1048,795,253,41.3,36.1,41.4,36.9,50.9,35.7,30.3,26.2,18.0
