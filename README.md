@@ -1,54 +1,56 @@
-# INF8808E Project Team 10
+# INF8808E Project — Team 10
 
-Independent D3 website for exploring how developer profiles and work contexts influence AI tool adoption and perceptions, using the [public 2025 Stack Overflow Developer Survey dataset](https://survey.stackoverflow.co).
+This D3 website explores how developer roles and work contexts relate to AI-tool use,
+trust, frustration, requests for human help, and AI-agent use. It is based on the
+[2025 Stack Overflow Developer Survey](https://survey.stackoverflow.co).
 
-## Current Setup
+## Run the project
 
-- Vite app with D3 visualizations.
-- GitHub Pages deployment workflow in `.github/workflows/deploy.yml`.
-- Production Vite base path configured for `R3ivil/inf8808E-project-team10`.
-- Chart-ready analysis summaries served from `public/data/analysis/`.
-- Validated visualization plan in `viz-plan.json`.
-- Implemented D3 modules in `src/visualizations/`.
-
-## Commands
+Requirements: Node.js 20.19+ or 22.12+ and npm.
 
 ```bash
 npm install
 npm run dev
+```
+
+Vite serves the site at `http://localhost:5173/` by default.
+
+Create and inspect a production build with:
+
+```bash
 npm run build
 npm run preview
 ```
 
-Local development URL:
+## What is implemented
 
-```text
-http://localhost:5173/
-```
+The site contains six linked visualizations:
 
-## Data
+1. AI adoption compared with trust or confidence on complex tasks
+2. AI adoption composition across profiles and work contexts
+3. Cohort differences from the overall survey baseline
+4. AI frustrations by adoption group
+5. Situations where developers still seek human help
+6. AI-agent use and reported changes to work
 
-The app uses compact chart-ready summaries:
+The global controls switch between roles and industries, set the minimum valid sample
+size, and reset the page. Cohorts pinned in V1, V2, V3, or V6 remain highlighted in the
+other compatible charts.
 
-- `public/data/analysis/role_metrics.csv`
-- `public/data/analysis/role_adoption_composition.csv`
-- `public/data/analysis/yearscode_cohort_stats.csv`
-- `public/data/analysis/age_cohort_stats.csv`
-- `public/data/analysis/remotework_cohort_stats.csv`
-- `public/data/analysis/orgsize_cohort_stats.csv`
-- `public/data/analysis/agent_readiness_by_role.csv`
-- `public/data/analysis/agent_readiness_by_industry.csv`
-- `public/data/analysis/frustrations_by_adoption.csv`
-- `public/data/analysis/aihuman_by_trust.csv`
-- `public/data/analysis/aihuman_by_complex.csv`
-- `public/data/analysis/aihuman_by_adoption.csv`
-- `public/data/analysis/industry_metrics.csv`
-- `public/data/analysis/industry_cohort_stats.csv`
-- `public/data/analysis/icorpm_adoption_composition.csv`
+## Project structure
 
-The source subset was prepared from the [public 2025 Stack Overflow Developer Survey dataset](https://survey.stackoverflow.co) using the variables selected in the Team 10 mockup. The raw 49,191-row subset is intentionally not served by the website because the current visualizations use pre-aggregated denominators and rates.
+- `src/main.js` loads the analysis files and coordinates the page state.
+- `src/components/` contains the global controls, section navigation, and pinned-cohort panel.
+- `src/visualizations/` contains one D3 module per visualization plus shared chart utilities.
+- `src/styles/style.css` contains the responsive page and chart styling.
+- `public/data/analysis/` contains the compact CSV summaries used by the browser.
+- `scripts/build_analysis_data.py` regenerates those summaries from the local survey subset.
 
-To regenerate the chart-ready CSVs from the local raw subset:
+The raw 49,191-row subset is intentionally excluded from Git. The website serves only
+the aggregates required by the visualizations, including valid and missing response
+counts used in tooltips.
+
+To regenerate the tracked analysis files:
 
 ```bash
 python scripts/build_analysis_data.py \
@@ -56,15 +58,14 @@ python scripts/build_analysis_data.py \
   --out public/data/analysis
 ```
 
-## Visualization Plan
+## Deployment
 
-The initial plan follows the local INF8808 D3 visualization agent workflow and maps to the six mockup sections:
+The GitHub Actions workflow in `.github/workflows/deploy.yml` builds the site and deploys
+`dist/` to GitHub Pages whenever `main` is updated. The production base path is configured
+in `vite.config.js` for this repository.
 
-1. Adoption-trust gap by cohort
-2. AI adoption composition across profiles and work contexts
-3. Perception differences from the survey baseline
-4. AI frustrations by adoption group
-5. Human-help situations by trust group
-6. AI-agent readiness by cohort
+## Interpretation
 
-The first implementation uses the data-analysis findings to emphasize role, experience, manager/contributor status, frustration maturity, human-help situations, and AI-agent readiness.
+All percentages are descriptive. Missing responses are excluded independently for each
+measure, and multi-select questions can total more than 100%. The visualizations show
+associations in this survey sample; they do not establish causal effects.

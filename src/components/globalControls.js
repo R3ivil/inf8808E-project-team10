@@ -69,6 +69,8 @@ export function mountGlobalControls(container, store) {
     const { scope, minValidN, pinnedCohorts } = store.getState()
     roleBtn.classList.toggle('active', scope === 'Role')
     industryBtn.classList.toggle('active', scope === 'Industry')
+    roleBtn.setAttribute('aria-pressed', String(scope === 'Role'))
+    industryBtn.setAttribute('aria-pressed', String(scope === 'Industry'))
     if (String(minValidN) !== minSelect.value) minSelect.value = String(minValidN)
     summary.textContent = pinnedCohorts.length
       ? `${pinnedCohorts.length} cohort${pinnedCohorts.length === 1 ? '' : 's'} pinned across charts.`

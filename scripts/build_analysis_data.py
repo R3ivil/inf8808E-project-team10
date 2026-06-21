@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate chart-ready CSV summaries from the Stack Overflow 2025 subset.
 
-Default input is the project-level subset kept outside this Vite repo:
-../data/results.csv.csv
+The default input is the local survey subset at data/results.csv.
 """
 
 from __future__ import annotations
@@ -26,7 +25,13 @@ ADOPTION = {
     "No, and I don't plan to": "Non-users",
 }
 
-ADOPTION_ORDER = ["Daily users", "Weekly users", "Occasional users", "Planned users", "Non-users"]
+ADOPTION_ORDER = [
+    "Daily users",
+    "Weekly users",
+    "Occasional users",
+    "Planned users",
+    "Non-users",
+]
 
 AISELECT_COLUMNS = [
     "group",
@@ -115,7 +120,12 @@ AGE_ORDER = [
 ]
 
 YEARS_ORDER = ["0-3 years", "4-8 years", "9-15 years", "16+ years"]
-REMOTE_ORDER = ["Hybrid, remote-leaning", "In-person", "Hybrid, office-leaning", "Remote"]
+REMOTE_ORDER = [
+    "Hybrid, remote-leaning",
+    "In-person",
+    "Hybrid, office-leaning",
+    "Remote",
+]
 ORGSIZE_ORDER = [
     "Just me - I am a freelancer, sole proprietor, etc.",
     "Less than 20 employees",
@@ -290,7 +300,9 @@ def metric_summary(group: str, rows: list[dict[str, str]]) -> dict[str, object]:
         "Favorable%": pct(sum(is_favorable(row) for row in rows), n_sent),
         "n_Threat": n_threat,
         "missing_Threat": n_group - n_threat,
-        "Threat%": pct(sum(clean(row.get("AIThreat")) == "Yes" for row in rows), n_threat),
+        "Threat%": pct(
+            sum(clean(row.get("AIThreat")) == "Yes" for row in rows), n_threat
+        ),
         "n_Agent": n_agent,
         "missing_Agent": n_group - n_agent,
         "AgentUser%": pct(sum(is_agent_user(row) for row in rows), n_agent),
@@ -313,7 +325,10 @@ def adoption_summary(group: str, rows: list[dict[str, str]]) -> dict[str, object
         "Monthly%": pct(counts["Occasional users"], n_ai),
         "Planned%": pct(counts["Planned users"], n_ai),
         "NonUser%": pct(counts["Non-users"], n_ai),
-        "AnyUser%": pct(counts["Daily users"] + counts["Weekly users"] + counts["Occasional users"], n_ai),
+        "AnyUser%": pct(
+            counts["Daily users"] + counts["Weekly users"] + counts["Occasional users"],
+            n_ai,
+        ),
     }
 
 
@@ -327,13 +342,40 @@ def agent_summary(group: str, rows: list[dict[str, str]]) -> dict[str, object]:
         "n_agent": n_agent,
         "missing_Agent": n_group - n_agent,
         "AgentUser%": pct(sum(is_agent_user(row) for row in rows), n_agent),
-        "AgentDaily%": pct(sum(clean(row.get("AIAgents")) == "Yes, I use AI agents at work daily" for row in rows), n_agent),
-        "CopilotOnly%": pct(sum(clean(row.get("AIAgents")) == "No, I use AI exclusively in copilot/autocomplete mode" for row in rows), n_agent),
-        "AgentPlanned%": pct(sum(clean(row.get("AIAgents")) == "No, but I plan to" for row in rows), n_agent),
-        "AgentNo%": pct(sum(clean(row.get("AIAgents")) == "No, and I don't plan to" for row in rows), n_agent),
+        "AgentDaily%": pct(
+            sum(
+                clean(row.get("AIAgents")) == "Yes, I use AI agents at work daily"
+                for row in rows
+            ),
+            n_agent,
+        ),
+        "CopilotOnly%": pct(
+            sum(
+                clean(row.get("AIAgents"))
+                == "No, I use AI exclusively in copilot/autocomplete mode"
+                for row in rows
+            ),
+            n_agent,
+        ),
+        "AgentPlanned%": pct(
+            sum(clean(row.get("AIAgents")) == "No, but I plan to" for row in rows),
+            n_agent,
+        ),
+        "AgentNo%": pct(
+            sum(
+                clean(row.get("AIAgents")) == "No, and I don't plan to" for row in rows
+            ),
+            n_agent,
+        ),
         "n_change": n_change,
         "missing_Change": n_group - n_change,
-        "GreatChange%": pct(sum(clean(row.get("AIAgentChange")) == "Yes, to a great extent" for row in rows), n_change),
+        "GreatChange%": pct(
+            sum(
+                clean(row.get("AIAgentChange")) == "Yes, to a great extent"
+                for row in rows
+            ),
+            n_change,
+        ),
     }
 
 
@@ -353,7 +395,9 @@ def multi_select_summary(
     n_group = len(rows)
     responders = [row for row in rows if valid(row.get(source_col))]
     n_resp = len(responders)
-    counts = Counter(item for row in responders for item in split_multi(clean(row.get(source_col))))
+    counts = Counter(
+        item for row in responders for item in split_multi(clean(row.get(source_col)))
+    )
     out: dict[str, object] = {
         "group": group,
         "n_group": n_group,
@@ -368,51 +412,102 @@ def multi_select_summary(
 def frustration_summary(group: str, rows: list[dict[str, str]]) -> dict[str, object]:
     responders = [row for row in rows if valid(row.get("AIFrustration"))]
     n_resp = len(responders)
-    counts = Counter(item for row in responders for item in split_multi(clean(row.get("AIFrustration"))))
+    counts = Counter(
+        item
+        for row in responders
+        for item in split_multi(clean(row.get("AIFrustration")))
+    )
     out: dict[str, object] = {"group": group, "n_resp": n_resp}
     for item in FRUSTRATION_ITEMS:
         out[item] = pct(counts[item], n_resp)
     return out
 
 
-def ordered_or_sorted(rows: list[dict[str, object]], order: list[str] | None = None, by: str = "AnyUser%") -> list[dict[str, object]]:
+def ordered_or_sorted(
+    rows: list[dict[str, object]], order: list[str] | None = None, by: str = "AnyUser%"
+) -> list[dict[str, object]]:
     if order:
         positions = {value: index for index, value in enumerate(order)}
-        return sorted(rows, key=lambda row: positions.get(str(row["group"]), len(positions)))
+        return sorted(
+            rows, key=lambda row: positions.get(str(row["group"]), len(positions))
+        )
     return sorted(rows, key=lambda row: float(row[by]), reverse=True)
 
 
 def build(input_path: Path, output_dir: Path) -> None:
     rows = read_rows(input_path)
 
-    role_groups = group_rows(rows, lambda row: role_bucket(clean(row.get("DevType"))) if valid(row.get("DevType")) else "")
-    industry_groups = group_rows(rows, lambda row: clean(row.get("Industry")) if valid(row.get("Industry")) else "")
-    age_groups = group_rows(rows, lambda row: clean(row.get("Age")) if valid(row.get("Age")) else "")
+    role_groups = group_rows(
+        rows,
+        lambda row: (
+            role_bucket(clean(row.get("DevType"))) if valid(row.get("DevType")) else ""
+        ),
+    )
+    industry_groups = group_rows(
+        rows,
+        lambda row: clean(row.get("Industry")) if valid(row.get("Industry")) else "",
+    )
+    age_groups = group_rows(
+        rows, lambda row: clean(row.get("Age")) if valid(row.get("Age")) else ""
+    )
     years_groups = group_rows(rows, lambda row: years_bin(clean(row.get("YearsCode"))))
-    remote_groups = group_rows(rows, lambda row: remote_bucket(clean(row.get("RemoteWork"))) if valid(row.get("RemoteWork")) else "")
-    orgsize_groups = group_rows(rows, lambda row: orgsize_bucket(clean(row.get("OrgSize"))) if valid(row.get("OrgSize")) else "")
-    icorpm_groups = group_rows(rows, lambda row: clean(row.get("ICorPM")) if valid(row.get("ICorPM")) else "")
+    remote_groups = group_rows(
+        rows,
+        lambda row: (
+            remote_bucket(clean(row.get("RemoteWork")))
+            if valid(row.get("RemoteWork"))
+            else ""
+        ),
+    )
+    orgsize_groups = group_rows(
+        rows,
+        lambda row: (
+            orgsize_bucket(clean(row.get("OrgSize")))
+            if valid(row.get("OrgSize"))
+            else ""
+        ),
+    )
+    icorpm_groups = group_rows(
+        rows, lambda row: clean(row.get("ICorPM")) if valid(row.get("ICorPM")) else ""
+    )
     adoption_groups = group_rows(rows, adoption_group)
-    trust_groups = group_rows(rows, lambda row: clean(row.get("AIAcc")) if valid(row.get("AIAcc")) else "")
-    complex_groups = group_rows(rows, lambda row: clean(row.get("AIComplex")) if valid(row.get("AIComplex")) else "")
+    trust_groups = group_rows(
+        rows, lambda row: clean(row.get("AIAcc")) if valid(row.get("AIAcc")) else ""
+    )
+    complex_groups = group_rows(
+        rows,
+        lambda row: clean(row.get("AIComplex")) if valid(row.get("AIComplex")) else "",
+    )
 
-    role_metrics = [metric_summary(group, group_rows_) for group, group_rows_ in role_groups.items()]
+    role_metrics = [
+        metric_summary(group, group_rows_) for group, group_rows_ in role_groups.items()
+    ]
     role_metrics = [row for row in role_metrics if row["n_AISelect"] >= 150]
     role_metrics = ordered_or_sorted(role_metrics)
     for row in role_metrics:
         row["Role"] = row["group"]
-    write_csv(output_dir / "role_metrics.csv", role_metrics, ["Role", "group", *METRIC_COLUMNS])
+    write_csv(
+        output_dir / "role_metrics.csv",
+        role_metrics,
+        ["Role", "group", *METRIC_COLUMNS],
+    )
 
-    industry_metrics = [metric_summary(group, group_rows_) for group, group_rows_ in industry_groups.items()]
+    industry_metrics = [
+        metric_summary(group, group_rows_)
+        for group, group_rows_ in industry_groups.items()
+    ]
     industry_metrics = [row for row in industry_metrics if row["n_AISelect"] >= 150]
     industry_metrics = ordered_or_sorted(industry_metrics)
     for row in industry_metrics:
         row["Industry"] = row["group"]
-    write_csv(output_dir / "industry_metrics.csv", industry_metrics, ["Industry", "group", *METRIC_COLUMNS])
+    write_csv(
+        output_dir / "industry_metrics.csv",
+        industry_metrics,
+        ["Industry", "group", *METRIC_COLUMNS],
+    )
 
     adoption_jobs = [
         ("role_adoption_composition.csv", role_groups, None),
-        ("industry_cohort_stats.csv", industry_groups, None),
         ("age_cohort_stats.csv", age_groups, AGE_ORDER),
         ("yearscode_cohort_stats.csv", years_groups, YEARS_ORDER),
         ("remotework_cohort_stats.csv", remote_groups, REMOTE_ORDER),
@@ -420,9 +515,14 @@ def build(input_path: Path, output_dir: Path) -> None:
         ("icorpm_adoption_composition.csv", icorpm_groups, None),
     ]
     for filename, groups, order in adoption_jobs:
-        summaries = [adoption_summary(group, group_rows_) for group, group_rows_ in groups.items()]
+        summaries = [
+            adoption_summary(group, group_rows_)
+            for group, group_rows_ in groups.items()
+        ]
         summaries = [row for row in summaries if row["n_AISelect"] >= 150]
-        write_csv(output_dir / filename, ordered_or_sorted(summaries, order), AISELECT_COLUMNS)
+        write_csv(
+            output_dir / filename, ordered_or_sorted(summaries, order), AISELECT_COLUMNS
+        )
 
     agent_columns = [
         "group",
@@ -442,11 +542,20 @@ def build(input_path: Path, output_dir: Path) -> None:
         ("agent_readiness_by_role.csv", role_groups),
         ("agent_readiness_by_industry.csv", industry_groups),
     ]:
-        summaries = [agent_summary(group, group_rows_) for group, group_rows_ in groups.items()]
+        summaries = [
+            agent_summary(group, group_rows_) for group, group_rows_ in groups.items()
+        ]
         summaries = [row for row in summaries if row["n_agent"] >= 150]
-        write_csv(output_dir / filename, ordered_or_sorted(summaries, by="AgentUser%"), agent_columns)
+        write_csv(
+            output_dir / filename,
+            ordered_or_sorted(summaries, by="AgentUser%"),
+            agent_columns,
+        )
 
-    frustrations = [frustration_summary(group, group_rows_) for group, group_rows_ in adoption_groups.items()]
+    frustrations = [
+        frustration_summary(group, group_rows_)
+        for group, group_rows_ in adoption_groups.items()
+    ]
     write_csv(
         output_dir / "frustrations_by_adoption.csv",
         ordered_or_sorted(frustrations, ADOPTION_ORDER),
@@ -461,11 +570,15 @@ def build(input_path: Path, output_dir: Path) -> None:
     human_columns = ["group", "n_group", "n_resp", "missing_AIHuman", *AIHUMAN_ITEMS]
     for filename, groups, order in human_jobs:
         summaries = [
-            multi_select_summary(group, group_rows_, "AIHuman", "missing_AIHuman", AIHUMAN_ITEMS)
+            multi_select_summary(
+                group, group_rows_, "AIHuman", "missing_AIHuman", AIHUMAN_ITEMS
+            )
             for group, group_rows_ in groups.items()
         ]
         summaries = [row for row in summaries if row["n_resp"] >= 150]
-        write_csv(output_dir / filename, ordered_or_sorted(summaries, order), human_columns)
+        write_csv(
+            output_dir / filename, ordered_or_sorted(summaries, order), human_columns
+        )
 
 
 def main() -> None:

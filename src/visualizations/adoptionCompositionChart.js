@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { togglePinnedCohort } from '../state.js'
 import {
   ADOPTION_COLORS,
   ADOPTION_LABELS,
@@ -22,9 +23,9 @@ function panelSource(title) {
   return title === 'Role' ? 'role' : null
 }
 
-function preparedRows(rows, maxRows, sortBy, pinnedLabels = new Set()) {
+function preparedRows(rows, maxRows, minValidN, sortBy, pinnedLabels = new Set()) {
   const prepared = rows
-    .filter((d) => toNumber(d.n_AISelect) >= 150)
+    .filter((d) => toNumber(d.n_AISelect) >= minValidN)
     .map((d) => ({
       ...d,
       'Frequent%': toNumber(d['Daily%']) + toNumber(d['Weekly%']),
@@ -74,7 +75,13 @@ export function renderAdoptionCompositionChart(container, panels, options = {}) 
       : new Set()
     const col = index % 2
     const row = Math.floor(index / 2)
-    const rows = preparedRows(panel.rows, options.maxRows ?? 5, options.sortBy ?? 'source', pinnedLabels)
+    const rows = preparedRows(
+      panel.rows,
+      options.maxRows ?? 5,
+      options.minValidN ?? 150,
+      options.sortBy ?? 'source',
+      pinnedLabels,
+    )
     const x0 = margin.left + col * (panelWidth + panelGapX)
     const y0 = margin.top + row * (panelHeight + panelGapY)
     const g = svg.append('g').attr('transform', `translate(${x0},${y0})`)
@@ -105,12 +112,12 @@ export function renderAdoptionCompositionChart(container, panels, options = {}) 
         .attr('role', 'button')
         .attr('aria-label', (d) => (pinnedLabels.has(d) ? `Unpin ${d}` : `Pin ${d}`))
         .on('click', (_event, d) => {
-          options.store?.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+          options.store?.setState((current) => togglePinnedCohort(current, d, source))
         })
         .on('keydown', (event, d) => {
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault()
-            options.store?.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+            options.store?.setState((current) => togglePinnedCohort(current, d, source))
           }
         })
       applyPinnedMark(labels, (d) => pinnedLabels.has(d))
@@ -159,11 +166,4 @@ export function renderAdoptionCompositionChart(container, panels, options = {}) 
       })
     })
   })
-}
-
-function togglePinned(list, label, source) {
-  const id = `${source === 'industry' ? 'industry' : 'role'}:${label}`
-  const exists = list.some((c) => c.id === id)
-  if (exists) return list.filter((c) => c.id !== id)
-  return [...list, { id, source: source === 'industry' ? 'industry' : 'role', label }]
 }

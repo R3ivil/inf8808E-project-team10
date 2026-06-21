@@ -655,11 +655,6 @@ select {
   stroke-width: 2;
 }
 
-.frustration-line {
-  fill: none;
-  stroke-width: 2.4;
-}
-
 .dot {
   stroke: #ffffff;
   stroke-width: 1.5;

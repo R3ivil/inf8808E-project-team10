@@ -1,5 +1,3 @@
-import { cohortId } from '../state.js'
-
 function makeChip(cohort, onUnpin) {
   const li = document.createElement('li')
   li.className = 'cohort-chip'
@@ -69,5 +67,4 @@ export function mountCohortWorkspace(container, store) {
 
   render()
   store.subscribe(render)
-  return { cohortId }
 }

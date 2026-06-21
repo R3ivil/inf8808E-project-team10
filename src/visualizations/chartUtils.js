@@ -4,9 +4,6 @@ export const BLUE = '#2f6f9f'
 export const ORANGE = '#d98b35'
 export const GREEN = '#3c9560'
 export const PURPLE = '#7c6bb1'
-export const GRID = '#d8dee8'
-export const TEXT = '#1f2937'
-export const MUTED = '#64748b'
 
 export const ADOPTION_COLORS = {
   'Frequent%': '#2f6f9f',
@@ -137,21 +134,6 @@ export function hideTooltip() {
   d3.select('#tooltip').style('display', 'none')
 }
 
-export function addXAxis(g, scale, y, width, label) {
-  g.append('g')
-    .attr('class', 'axis')
-    .attr('transform', `translate(0,${y})`)
-    .call(d3.axisBottom(scale).ticks(5).tickFormat((d) => `${d}%`))
-    .call((axis) => axis.select('.domain').remove())
-
-  g.append('text')
-    .attr('x', width)
-    .attr('y', y + 42)
-    .attr('text-anchor', 'end')
-    .attr('class', 'axis-label')
-    .text(label)
-}
-
 export function addVerticalGrid(g, scale, height) {
   g.append('g')
     .attr('class', 'grid')
@@ -173,7 +155,7 @@ export function addLegend(root, items) {
 export function markInteractive(selection, label) {
   selection
     .attr('tabindex', 0)
-    .attr('role', 'button')
+    .attr('role', 'img')
     .attr('aria-label', label)
 }
 

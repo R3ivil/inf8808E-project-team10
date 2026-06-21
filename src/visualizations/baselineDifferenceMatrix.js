@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { togglePinnedCohort } from '../state.js'
 import {
   addPinLabelAffordance,
   applyPinnedMark,
@@ -30,19 +31,6 @@ const METRICS = [
 
 const RISK_METRICS = new Set(['Job-threat concern'])
 
-const ROLE_FOCUS = new Set([
-  'AI/ML engineer',
-  'Dev: front-end',
-  'Dev: mobile',
-  'Dev: back-end',
-  'Cloud infra engineer',
-  'DevOps engineer',
-  'Senior executive',
-  'Founder',
-  'Manager',
-  'Dev: full-stack',
-])
-
 export function renderBaselineDifferenceMatrix(container, { data, source, state, store }) {
   const root = clear(container)
   const labelKey = 'group'
@@ -50,14 +38,13 @@ export function renderBaselineDifferenceMatrix(container, { data, source, state,
   const pinnedLabels = new Set(
     state.pinnedCohorts.filter((c) => c.source === source).map((c) => c.label),
   )
-  const focus = source === 'role'
-    ? (d) => ROLE_FOCUS.has(d[labelKey]) && toNumber(d.n_AISelect) >= Math.min(250, minValidN)
-    : (d) => toNumber(d.n_AISelect) >= Math.max(650, minValidN)
   const sortMetric = state.v3SortMetric
   const metricSpec = METRICS.find(([metric]) => metric === sortMetric) ?? METRICS[0]
   const maxRows = 8
 
-  const passing = data.filter(focus)
+  const passing = data.filter((row) =>
+    METRICS.every(([, , nKey]) => toNumber(row[nKey]) >= minValidN),
+  )
   const pinnedRows = passing.filter((d) => pinnedLabels.has(d[labelKey]))
   const candidates = passing
     .filter((d) => !pinnedLabels.has(d[labelKey]))
@@ -160,12 +147,12 @@ export function renderBaselineDifferenceMatrix(container, { data, source, state,
   applyPinnedMark(yLabels, (d) => pinnedLabels.has(d))
   yLabels
     .on('click', (_event, d) => {
-      store.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+      store.setState((current) => togglePinnedCohort(current, d, source))
     })
     .on('keydown', (event, d) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
-        store.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+        store.setState((current) => togglePinnedCohort(current, d, source))
       }
     })
 
@@ -181,11 +168,4 @@ export function renderBaselineDifferenceMatrix(container, { data, source, state,
     .attr('y', height - 14)
     .attr('class', 'chart-note')
     .text('Values are percentage-point differences from the overall rate. Threat is a risk metric.')
-}
-
-function togglePinned(list, label, source) {
-  const id = `${source === 'industry' ? 'industry' : 'role'}:${label}`
-  const exists = list.some((c) => c.id === id)
-  if (exists) return list.filter((c) => c.id !== id)
-  return [...list, { id, source: source === 'industry' ? 'industry' : 'role', label }]
 }

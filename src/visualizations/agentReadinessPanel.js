@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { togglePinnedCohort } from '../state.js'
 import {
   GREEN,
   PURPLE,
@@ -25,7 +26,7 @@ export function renderAgentReadinessPanel(container, { data, source, state, stor
     state.pinnedCohorts.filter((c) => c.source === source).map((c) => c.label),
   )
 
-  const passing = data.filter((d) => toNumber(d.n_agent) >= Math.max(150, minValidN))
+  const passing = data.filter((d) => toNumber(d.n_agent) >= minValidN)
   const pinnedRows = passing.filter((d) => pinnedLabels.has(d.group))
   const candidates = passing
     .filter((d) => !pinnedLabels.has(d.group))
@@ -59,7 +60,7 @@ export function renderAgentReadinessPanel(container, { data, source, state, stor
     .attr('x', margin.left)
     .attr('y', 38)
     .attr('class', 'chart-note')
-    .text(`Sorted by agent use; min valid n=${Math.max(150, minValidN)}.`)
+    .text(`Sorted by agent use; min valid n=${minValidN}.`)
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
   const x = d3.scaleLinear().domain([0, 100]).range([0, innerWidth])
   const y = d3.scaleBand().domain(rows.map((d) => d.group)).range([0, innerHeight]).padding(0.34)
@@ -77,12 +78,12 @@ export function renderAgentReadinessPanel(container, { data, source, state, stor
     .attr('role', 'button')
     .attr('aria-label', (d) => (pinnedLabels.has(d) ? `Unpin ${d}` : `Pin ${d}`))
     .on('click', (_event, d) => {
-      store.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+      store.setState((current) => togglePinnedCohort(current, d, source))
     })
     .on('keydown', (event, d) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
-        store.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+        store.setState((current) => togglePinnedCohort(current, d, source))
       }
     })
 
@@ -144,11 +145,4 @@ export function renderAgentReadinessPanel(container, { data, source, state, stor
     .attr('class', 'axis-label')
     .attr('text-anchor', 'end')
     .text('Percent of valid respondents')
-}
-
-function togglePinned(list, label, source) {
-  const id = `${source === 'industry' ? 'industry' : 'role'}:${label}`
-  const exists = list.some((c) => c.id === id)
-  if (exists) return list.filter((c) => c.id !== id)
-  return [...list, { id, source: source === 'industry' ? 'industry' : 'role', label }]
 }

@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { togglePinnedCohort } from '../state.js'
 import {
   BLUE,
   ORANGE,
@@ -79,12 +80,12 @@ export function renderAdoptionTrustGapChart(container, { data, source, state, st
     .attr('role', 'button')
     .attr('aria-label', (d) => (pinnedLabels.has(d) ? `Unpin ${d}` : `Pin ${d}`))
     .on('click', (_event, d) => {
-      store.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+      store.setState((current) => togglePinnedCohort(current, d, source))
     })
     .on('keydown', (event, d) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
-        store.setState((s) => ({ ...s, pinnedCohorts: togglePinned(s.pinnedCohorts, d, source) }))
+        store.setState((current) => togglePinnedCohort(current, d, source))
       }
     })
 
@@ -168,11 +169,4 @@ export function renderAdoptionTrustGapChart(container, { data, source, state, st
     { label: 'AI adoption rate', color: BLUE },
     { label: metricLabel, color: ORANGE },
   ])
-}
-
-function togglePinned(list, label, source) {
-  const id = `${source === 'industry' ? 'industry' : 'role'}:${label}`
-  const exists = list.some((c) => c.id === id)
-  if (exists) return list.filter((c) => c.id !== id)
-  return [...list, { id, source: source === 'industry' ? 'industry' : 'role', label }]
 }

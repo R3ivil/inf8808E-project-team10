@@ -11,7 +11,7 @@ import { renderFrustrationProfiles } from './visualizations/frustrationProfiles.
 import { renderHumanHelpMatrix } from './visualizations/humanHelpMatrix.js'
 import './styles/style.css'
 
-const DATA = `${import.meta.env.BASE_URL}data/analysis/`
+const DATA_ROOT = `${import.meta.env.BASE_URL}data/analysis/`
 
 const compositionSources = {
   Age: 'age_cohort_stats.csv',
@@ -27,8 +27,8 @@ const v2PanelSets = {
   'Work context': ['Work mode', 'Organization size', 'IC / manager'],
 }
 
-function csv(name) {
-  return d3.csv(`${DATA}${name}`)
+function loadCsv(name) {
+  return d3.csv(`${DATA_ROOT}${name}`)
 }
 
 function setText(id, text) {
@@ -61,15 +61,15 @@ async function init() {
     humanAdoption,
     ...compositionData
   ] = await Promise.all([
-    csv('role_metrics.csv'),
-    csv('industry_metrics.csv'),
-    csv('agent_readiness_by_role.csv'),
-    csv('agent_readiness_by_industry.csv'),
-    csv('frustrations_by_adoption.csv'),
-    csv('aihuman_by_trust.csv'),
-    csv('aihuman_by_complex.csv'),
-    csv('aihuman_by_adoption.csv'),
-    ...Object.values(compositionSources).map(csv),
+    loadCsv('role_metrics.csv'),
+    loadCsv('industry_metrics.csv'),
+    loadCsv('agent_readiness_by_role.csv'),
+    loadCsv('agent_readiness_by_industry.csv'),
+    loadCsv('frustrations_by_adoption.csv'),
+    loadCsv('aihuman_by_trust.csv'),
+    loadCsv('aihuman_by_complex.csv'),
+    loadCsv('aihuman_by_adoption.csv'),
+    ...Object.values(compositionSources).map(loadCsv),
   ])
 
   const metricSources = { role: roleMetrics, industry: industryMetrics }
@@ -86,6 +86,7 @@ async function init() {
   function renderV1() {
     const state = store.getState()
     const src = source()
+    setValue('#gap-metric', state.v1Metric)
     setText('#gap-state', state.v1Metric === 'ComplexConf%' ? 'complex confidence' : 'trust')
     renderAdoptionTrustGapChart('#v1-chart', {
       data: metricSources[src],
@@ -97,13 +98,20 @@ async function init() {
 
   function renderV2() {
     const state = store.getState()
-    const panels = Object.fromEntries(v2PanelSets[state.v2Tab].map((name) => [name, compositions[name]]))
-    setText('#composition-state', `${state.v2Tab}; order ${state.v2Sort === 'source' ? 'survey' : state.v2Sort}`)
+    const panels = Object.fromEntries(
+      v2PanelSets[state.v2Tab].map((name) => [name, compositions[name]]),
+    )
+    setValue('#composition-sort', state.v2Sort)
+    const orderLabel = state.v2Sort === 'source' ? 'survey' : state.v2Sort
+    setText('#composition-state', `${state.v2Tab}; order ${orderLabel}`)
     document.querySelectorAll('[data-v2-tab]').forEach((button) => {
-      button.classList.toggle('active', button.dataset.v2Tab === state.v2Tab)
+      const isActive = button.dataset.v2Tab === state.v2Tab
+      button.classList.toggle('active', isActive)
+      button.setAttribute('aria-pressed', String(isActive))
     })
     renderAdoptionCompositionChart('#v2-chart', panels, {
       maxRows: state.v2Tab === 'Profile' ? 8 : 9,
+      minValidN: state.minValidN,
       sortBy: state.v2Sort,
       state,
       store,
@@ -113,6 +121,7 @@ async function init() {
   function renderV3() {
     const state = store.getState()
     const src = source()
+    setValue('#baseline-sort', state.v3SortMetric)
     setText('#baseline-state', `Sorted by ${state.v3SortMetric}`)
     renderBaselineDifferenceMatrix('#v3-chart', {
       data: metricSources[src],
@@ -128,6 +137,7 @@ async function init() {
 
   function renderV5() {
     const state = store.getState()
+    setValue('#human-grouping', state.v5Grouping)
     setText('#human-state', `Grouped by ${state.v5Grouping.toLowerCase()}`)
     renderHumanHelpMatrix('#v5-chart', {
       data: humanSources[state.v5Grouping],
@@ -171,19 +181,22 @@ async function init() {
   setValue('#human-grouping', INITIAL_STATE.v5Grouping)
 
   store.subscribe((next, prev) => {
-    if (next.scope !== prev.scope) {
-      renderV1(); renderV3(); renderV6()
+    const scopeChanged = next.scope !== prev.scope
+    const minimumChanged = next.minValidN !== prev.minValidN
+    const pinnedChanged = next.pinnedCohorts !== prev.pinnedCohorts
+
+    if (scopeChanged || minimumChanged || next.v1Metric !== prev.v1Metric || pinnedChanged) {
+      renderV1()
     }
-    if (next.minValidN !== prev.minValidN) {
-      renderV1(); renderV6()
+    if (minimumChanged || next.v2Tab !== prev.v2Tab || next.v2Sort !== prev.v2Sort || pinnedChanged) {
+      renderV2()
     }
-    if (next.v1Metric !== prev.v1Metric) renderV1()
-    if (next.v2Tab !== prev.v2Tab || next.v2Sort !== prev.v2Sort || next.pinnedCohorts !== prev.pinnedCohorts) renderV2()
-    if (next.v3SortMetric !== prev.v3SortMetric) renderV3()
+    if (scopeChanged || minimumChanged || next.v3SortMetric !== prev.v3SortMetric || pinnedChanged) {
+      renderV3()
+    }
     if (next.v5Grouping !== prev.v5Grouping) renderV5()
-    if (next.v6MaxRows !== prev.v6MaxRows) renderV6()
-    if (next.pinnedCohorts !== prev.pinnedCohorts) {
-      renderV1(); renderV3(); renderV6()
+    if (scopeChanged || minimumChanged || next.v6MaxRows !== prev.v6MaxRows || pinnedChanged) {
+      renderV6()
     }
   })
 

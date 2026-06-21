@@ -1,13 +1,13 @@
 export const INITIAL_STATE = Object.freeze({
-  scope: 'Role',                 
-  minValidN: 250,                 
-  v1Metric: 'Trust%',          
-  v2Tab: 'Profile',             
-  v2Sort: 'source',             
-  v3SortMetric: 'Adoption',     
-  v5Grouping: 'Trust',            
-  v6MaxRows: 12,                  
-  pinnedCohorts: [],              
+  scope: 'Role',
+  minValidN: 250,
+  v1Metric: 'Trust%',
+  v2Tab: 'Profile',
+  v2Sort: 'source',
+  v3SortMetric: 'Adoption',
+  v5Grouping: 'Trust',
+  v6MaxRows: 12,
+  pinnedCohorts: [],
 })
 
 export function createStore(initial = INITIAL_STATE) {
@@ -44,21 +44,13 @@ export function createStore(initial = INITIAL_STATE) {
   return { getState, setState, subscribe, reset }
 }
 
-export function cohortId(label, source) {
-  return `${source === 'industry' ? 'industry' : 'role'}:${label}`
-}
+export function togglePinnedCohort(state, label, source) {
+  const normalizedSource = source === 'industry' ? 'industry' : 'role'
+  const id = `${normalizedSource}:${label}`
+  const isPinned = state.pinnedCohorts.some((cohort) => cohort.id === id)
+  const pinnedCohorts = isPinned
+    ? state.pinnedCohorts.filter((cohort) => cohort.id !== id)
+    : [...state.pinnedCohorts, { id, source: normalizedSource, label }]
 
-export function isPinned(state, label, source) {
-  const id = cohortId(label, source)
-  return state.pinnedCohorts.some((c) => c.id === id)
-}
-
-export function togglePin(state, label, source) {
-  const id = cohortId(label, source)
-  const current = state.pinnedCohorts
-  const exists = current.some((c) => c.id === id)
-  const next = exists
-    ? current.filter((c) => c.id !== id)
-    : [...current, { id, source: source === 'industry' ? 'industry' : 'role', label }]
-  return { ...state, pinnedCohorts: next }
+  return { ...state, pinnedCohorts }
 }

@@ -35,7 +35,10 @@ export function mountSideNav(container) {
 
   const setActive = (id) => {
     linkByHash.forEach((link, key) => {
-      link.classList.toggle('active', key === id)
+      const isActive = key === id
+      link.classList.toggle('active', isActive)
+      if (isActive) link.setAttribute('aria-current', 'location')
+      else link.removeAttribute('aria-current')
     })
   }
 
