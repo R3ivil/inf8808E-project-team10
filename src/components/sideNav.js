@@ -1,10 +1,10 @@
 const SECTIONS = [
-  { id: 'v1', label: 'V1 - Adoption vs trust' },
-  { id: 'v2', label: 'V2 - Adoption mix' },
-  { id: 'v3', label: 'V3 - Perception baseline' },
+  { id: 'v1', label: 'V1 - Adoption-Trust Gap' },
+  { id: 'v2', label: 'V2 - Adoption Composition' },
+  { id: 'v3', label: 'V3 - Perception Baseline' },
   { id: 'v4', label: 'V4 - Frustrations' },
   { id: 'v5', label: 'V5 - Human help' },
-  { id: 'v6', label: 'V6 - Agent readiness' },
+  { id: 'v6', label: 'V6 - AI-Agent readiness' },
 ]
 
 export function mountSideNav(container) {
